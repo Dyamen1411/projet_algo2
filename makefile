@@ -49,7 +49,7 @@ $(executable): $(objects)
 
 main.o: main.c hashtable.h holdall.h linked_list.h context.h opt.h types.h
 hashtable.o: hashtable.c hashtable.h
-holdall.o: holdall.c holdall.o
+holdall.o: holdall.c holdall.h
 linked_list.o: linked_list.c linked_list.h
 context.o: context.c context.h
 opt.o: opt.c opt.h
