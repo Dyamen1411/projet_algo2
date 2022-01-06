@@ -368,16 +368,29 @@ return_type opt__help(
 return_type opt__man(
     __attribute__((unused)) wsctx_parameters_t *p,
     __attribute__((unused)) const char *arg) {
-  // // name
-  // printf("\033[1mNAME\033[0m\n\t");
-  // print_short_description("ws");
-  // printf("\n");
-  // // synopsys
-  // printf("\033[1mSYNOPSYS\033[0m\n\t");
-  // print_usage("ws");
-  // printf("\n");
-  // // dexcription
-  // printf("\033[1mDESCRIPTION\033[0m\n\n\t");
+  printf("\033[1mNAME\033[0m\n\t");
+  print_short_description("ws");
+  printf("\n");
+  // synopsys
+  printf("\033[1mSYNOPSYS\033[0m\n\t");
+  print_usage("ws");
+  printf("\n");
+  // description
+  printf("\033[1mDESCRIPTION\033[0m\n\n\t");
+  // print_long_description("ws");
+  printf("\n");
+  // options
+  printf("\033[1mOPTIONS\033[0m\n\n\t");
+  printf("\n");
+  // limits
+  printf("\033[1mLIMITS\033[0m\n\n\t");
+  printf("\n");
+  // author
+  printf("\033[1mAUTHOR\033[0m\n\n\t");
+  printf("\n");
+  // copyright
+  printf("\033[1mCOPYRIGHT\033[0m\n\n\t");
+  printf("\n");
   return RETURN_EXIT;
 }
 
