@@ -219,7 +219,7 @@ static void print_usage(const char *exec_name) {
 }
 
 static void print_short_description(const char *exec_name) {
-  printf("%s - Print a list of words shared by text files\n", exec_name);
+  printf("%s - LANG_OPT_DESC_SHORT\n", exec_name);
 }
 
 static void print_limits() {
