@@ -117,7 +117,7 @@ int main(int argc, char **argv) {
   }
   // context parameters initialization
   {
-    parameters.exec_name = argv[0];
+    parameters.exec_name = argv[0] + (strncmp(argv[0], "./", 2) == 0 ? 2 : 0);
     int last_index;
     wsctx_parameters_default_initialization(&parameters);
     switch (parse_arguments(argc, argv, &parameters, files, &last_index)) {
@@ -215,8 +215,7 @@ dispose:
 
 static void print_usage(const char *exec_name) {
   printf(LANG_OPT__USAGE__USAGE ": %s [" LANG_OPT__USAGE__OPTION "]... "
-      LANG_OPT__USAGE__FILES "\n",
-      exec_name + (strncmp(exec_name, "./", 2) == 0 ? 2 : 0));
+      LANG_OPT__USAGE__FILES "\n", exec_name);
 }
 
 static void print_short_description(const char *exec_name) {
