@@ -121,32 +121,34 @@ int main(int argc, char **argv) {
     int last_index;
     wsctx_parameters_default_initialization(&parameters);
     switch (parse_arguments(argc, argv, &parameters, files, &last_index)) {
-      case RETURN_ERROR_OPT_MISSING_ARG:
-        fprintf(stderr, "%s: Missing argument '%s'.\n", argv[0],
-            argv[last_index]);
-        goto error;
+      case RETURN_NONE:
+        break;
       case RETURN_ERROR_OPT_UNKNOWN:
-        fprintf(stderr, "%s: Unknown option '%s'.\n", argv[0],
-            argv[last_index]);
+        fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__UNKNOWN_OPTION " '%s'.\n",
+            argv[0], argv[last_index]);
+        goto error;
+      case RETURN_ERROR_OPT_MISSING_ARG:
+        fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__MISSING_ARGUMENT " '%s'.\n",
+            argv[0], argv[last_index]);
         goto error;
       case RETURN_ERROR_CAPACITY:
         goto error_capacity;
-      case RETURN_ERROR_OPT_ARGUMENT:
+      case RETURN_ERROR_OPT_ARGUMENT: // TODO: ??
       case RETURN_EXIT:
         goto dispose;
       default:
-        printf("aaaaaa\n");
-      case RETURN_NONE:
-        break;
+        goto error_unexpected;
     }
-    // printf("%30s: %zu\n", "initial", parameters.initial);
-    // printf("%30s: %s\n", "punctuation like space",
-    //     parameters.punctuation_like_spaces ? "yes" : "no");
-    // printf("%30s: %s\n", "same numbers", parameters.same_number ? "yes"
-    //     : "no");
-    // printf("%30s: %zu\n", "top", parameters.top);
-    // printf("%30s: %s\n", "uppercasing", parameters.uppercasing ? "yes"
-    //     : "no");
+#ifdef DEBUG
+    printf("%30s: %zu\n", "initial", parameters.initial);
+    printf("%30s: %s\n", "punctuation like space",
+        parameters.punctuation_like_spaces ? "yes" : "no");
+    printf("%30s: %s\n", "same numbers", parameters.same_number ? "yes"
+        : "no");
+    printf("%30s: %zu\n", "top", parameters.top);
+    printf("%30s: %s\n", "uppercasing", parameters.uppercasing ? "yes"
+        : "no");
+#endif
   }
   // check if there is at least 2 files
   const size_t file_count = linked_list_size(files);
@@ -177,8 +179,7 @@ int main(int argc, char **argv) {
       case RETURN_ERROR_CAPACITY:
         goto error_capacity;
       default:
-        printf("aaaaaa\n");
-        goto error;
+        goto error_unexpected;
     }
   }
   {
@@ -186,19 +187,22 @@ int main(int argc, char **argv) {
     wsctx_output_data(ctx);
   }
   goto dispose;
-error_io:
-  fprintf(stderr, "%s: An error occured while processing file '%s'.\n", argv[0],
-      wsctx_get_error_message(ctx));
+error_not_enough_files:
+  fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__FILE_COUNT ".\n", argv[0]);
   goto error;
 error_unaccessible_file:
-  fprintf(stderr, "%s: Can't open for reading file '%s'.\n", argv[0],
+  fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__UNACCESSIBLE_FILE " '%s'.\n",
+      argv[0], wsctx_get_error_message(ctx));
+  goto error;
+error_io:
+  fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__IO " '%s'.\n", argv[0],
       wsctx_get_error_message(ctx));
   goto error;
 error_capacity:
-  fprintf(stderr, "%s: Not enough memory\n", argv[0]);
+  fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__CAPACITY "\n", argv[0]);
   goto error;
-error_not_enough_files:
-  fprintf(stderr, "%s: At least 2 files are expected.\n", argv[0]);
+error_unexpected:
+  fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__UNEXPECTED "\n", argv[0]);
   goto error;
 error:
   r = EXIT_FAILURE;

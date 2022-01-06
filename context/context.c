@@ -1,6 +1,7 @@
 #include "context.h"
 #include "holdall.h"
 #include "hashtable.h"
+#include "lang.h"
 #include "linked_list.h"
 
 #include <ctype.h>
@@ -207,17 +208,11 @@ return_type wsctx_parse_files(wsctx_t *ctx) {
       return res;
     }
   }
-  return RETURN_NONE;
   ctx->words.list = (word_t **) realloc(ctx->words.list,
       ctx->words.count * sizeof(word_t *));
   return ctx->words.list == NULL
          ? RETURN_ERROR_CAPACITY
          : RETURN_NONE;
-  //  +- old
-  //  | me : 374 477
-  //  | ha : 72 922
-  //  +- new
-  //  | me :
 }
 
 void wsctx_sort_data(wsctx_t *ctx) {
@@ -518,13 +513,17 @@ return_type wsctx_parse_next_file(wsctx_t *ctx) {
     if (ctx->parameters.initial != 0
         && word_length >= ctx->parameters.initial) {
       word_buffer[ctx->parameters.initial] = '\0';
-      fprintf(stderr, "%s: Word from ", ctx->parameters.exec_name);
+      fprintf(stderr, "%s: " LANG_MESSAGE_WARNING_WORD_SPLICING__WORD_FROM " ",
+          ctx->parameters.exec_name);
       if (*file_name == '\0') {
-        fprintf(stderr, "standard input");
+        fprintf(stderr, LANG_MESSAGE_WARNING_WORD_SPLICING__STDIN);
       } else {
         fprintf(stderr, "'%s'", file_name);
       }
-      fprintf(stderr, " at line %zu cut: '%s...'.\n", line_number, word_buffer);
+      fprintf(stderr,
+          " " LANG_MESSAGE_WARNING_WORD_SPLICING__AT_LINE " %zu "
+          LANG_MESSAGE_WARNING_WORD_SPLICING__CUT ": '%s...'.\n", line_number,
+          word_buffer);
     }
     // adding word to context
     word_t *word = wsctx_add_word(ctx, word_buffer);
