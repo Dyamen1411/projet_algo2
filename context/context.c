@@ -138,8 +138,8 @@ wsctx_t *wsctx_initialize(const wsctx_parameters_t *parameters,
     goto error;
   }
   ctx->table = hashtable_empty(
-      (int (*)(const void *, const void *))strcmp,
-      (size_t (*)(const void *))strhash);
+      (int (*) (const void *, const void *)) strcmp,
+      (size_t (*) (const void *)) strhash);
   if (ctx->table == NULL) {
     goto error;
   }
@@ -218,7 +218,7 @@ return_type wsctx_parse_files(wsctx_t *ctx) {
 void wsctx_sort_data(wsctx_t *ctx) {
   pattern_size = ctx->files.pattern_size;
   qsort(ctx->words.list, ctx->words.count, sizeof(word_t *),
-      (int (*)(const void *, const void *))word_compar_pattern);
+      (int (*) (const void *, const void *)) word_compar_pattern);
   word_t **base = ctx->words.list;
   size_t count = 1;
   word_t *previous = ctx->words.list[0];
@@ -226,7 +226,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
     if (word_compar_pattern((const word_t **) &previous,
         (const word_t **) &ctx->words.list[i]) != 0) {
       qsort(base, count, sizeof(word_t *),
-          (int (*)(const void *, const void *))word_compar_count);
+          (int (*) (const void *, const void *)) word_compar_count);
       base += count;
       previous = ctx->words.list[i];
       count = 1;
@@ -235,7 +235,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
     ++count;
   }
   qsort(base, count, sizeof(word_t *),
-      (int (*)(const void *, const void *))word_compar_count);
+      (int (*) (const void *, const void *)) word_compar_count);
   base = ctx->words.list;
   count = 1;
   previous = ctx->words.list[0];
@@ -245,7 +245,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
         || word_compar_count((const word_t **) &previous,
         (const word_t **) &ctx->words.list[i]) != 0) {
       qsort(base, count, sizeof(word_t *),
-          (int (*)(const void *, const void *))word_compar_word);
+          (int (*) (const void *, const void *)) word_compar_word);
       base += count;
       previous = ctx->words.list[i];
       count = 1;
@@ -254,7 +254,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
     ++count;
   }
   qsort(base, count, sizeof(word_t *),
-      (int (*)(const void *, const void *))word_compar_word);
+      (int (*) (const void *, const void *)) word_compar_word);
 }
 
 static void print_word(wsctx_t *ctx, word_t *word) {
@@ -304,7 +304,7 @@ void wsctx_dispose(wsctx_t **ctx) {
     return;
   }
   holdall_apply((*ctx)->dictionary, r_free);
-  holdall_apply((*ctx)->words.h, (int (*)(void *))r_free_word);
+  holdall_apply((*ctx)->words.h, (int (*) (void *)) r_free_word);
   holdall_dispose(&(*ctx)->dictionary);
   holdall_dispose(&(*ctx)->words.h);
   hashtable_dispose(&(*ctx)->table);
