@@ -41,9 +41,6 @@ executable = ws
 
 all: $(executable)
 
-clean:
-	$(RM) $(objects) $(executable)
-
 $(executable): $(objects)
 	$(CC) $(objects) $(LDFLAGS) -o $(executable)
 
@@ -53,3 +50,18 @@ holdall.o: holdall.c holdall.h
 linked_list.o: linked_list.c linked_list.h
 context.o: context.c context.h
 opt.o: opt.c opt.h
+
+.PHONY: arch clean
+arch:
+	$(MAKE) clean
+	tar -cf massiant.tar.gz \
+	makefile README.md \
+	$(main_dir)* \
+	$(hashtable_dir)* \
+	$(holdall_dir)* \
+	$(linked_list_dir)* \
+	$(context_dir)* \
+	$(opt_dir)*
+
+clean:
+	$(RM) $(objects) $(executable)
