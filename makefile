@@ -1,9 +1,9 @@
-main_dir = ./main/
-hashtable_dir = ./hashtable/
-holdall_dir = ./holdall/
-linked_list_dir = ./linked_list/
-context_dir = ./context/
-opt_dir = ./opt/
+main_dir = main
+hashtable_dir = hashtable
+holdall_dir = holdall
+linked_list_dir = linked_list
+context_dir = context
+opt_dir = opt
 
 CC = gcc
 CFLAGS = -std=c18 \
@@ -56,12 +56,12 @@ arch:
 	$(MAKE) clean
 	tar -czvf massiant.tar.gz \
 	makefile README.md \
-	$(main_dir)* \
-	$(hashtable_dir)* \
-	$(holdall_dir)* \
-	$(linked_list_dir)* \
-	$(context_dir)* \
-	$(opt_dir)*
+	$(main_dir)/* \
+	$(hashtable_dir)/* \
+	$(holdall_dir)/* \
+	$(linked_list_dir)/* \
+	$(context_dir)/* \
+	$(opt_dir)/*
 
 clean:
 	$(RM) $(objects) $(executable)
