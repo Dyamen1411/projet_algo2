@@ -1,6 +1,7 @@
 #include "context.h"
 #include "hashtable.h"
 #include "holdall.h"
+#include "lang.h"
 #include "linked_list.h"
 #include "opt.h"
 #include "types.h"
