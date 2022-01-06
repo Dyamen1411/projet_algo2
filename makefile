@@ -54,7 +54,7 @@ opt.o: opt.c opt.h
 .PHONY: arch clean
 arch:
 	$(MAKE) clean
-	tar -cf massiant.tar.gz \
+	tar -czvf massiant.tar.gz \
 	makefile README.md \
 	$(main_dir)* \
 	$(hashtable_dir)* \
