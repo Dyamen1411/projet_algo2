@@ -24,8 +24,24 @@
 #define LANG_MESSAGE_WARNING_WORD_SPLICING__CUT "cut"
 
 //==============================================================================
+//= Options
+//==============================================================================
 
-#define LANG_OPT__USAGE__OPTION "OPTION"
-#define LANG_OPT__USAGE__FILES "FILES"
+// Generic parameter name
+#define LANG_OPT__PARAMETER_OPTION "OPTION"
+#define LANG_OPT__PARAMETER_FILES "FILES"
+#define LANG_OPT__PARAMETER_VALUE "VALUE"
 
+// Option name
+#define LANG_OPT_NAME_LONG__USAGE "usage"
+
+// Usage
 #define LANG_OPT__USAGE__USAGE "Usage"
+
+//==============================================================================
+
+#define LANG_WS__SHORT_DESCRIPTION \
+  "Print a list of words shared by text files"
+
+#define LANG_WS__HOW_TO_USE_OPTIONS \
+  "Mandatory arguments to long options are mandatory for short options too"

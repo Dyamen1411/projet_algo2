@@ -12,6 +12,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/ioctl.h>
+
+#define DEFULT_MAX_TEXT_WIDTH 80
 
 #define STR(x) #x
 #define XSTR(x) STR(x)
@@ -214,12 +217,12 @@ dispose:
 }
 
 static void print_usage(const char *exec_name) {
-  printf(LANG_OPT__USAGE__USAGE ": %s [" LANG_OPT__USAGE__OPTION "]... "
-      LANG_OPT__USAGE__FILES "\n", exec_name);
+  printf(LANG_OPT__USAGE__USAGE ": %s [" LANG_OPT__PARAMETER_OPTION "]... "
+      LANG_OPT__PARAMETER_FILES "\n", exec_name);
 }
 
 static void print_short_description(const char *exec_name) {
-  printf("%s - Print a list of words shared by text files\n", exec_name);
+  printf("%s - " LANG_WS__SHORT_DESCRIPTION "\n", exec_name);
 }
 
 static void print_limits() {
@@ -315,28 +318,49 @@ return_type opt__uppercasing(wsctx_parameters_t *p,
 return_type opt__help(
     __attribute__((unused)) wsctx_parameters_t *p,
     __attribute__((unused)) const char *arg) {
-  printf("Usage : ");
-  print_usage("ws");
+  print_usage(p->exec_name);
+  print_short_description(p->exec_name);
   printf("\n");
-  print_short_description("ws");
-  printf("\n");
-  printf(
-      "Mandatory arguments to long options are mandatory for short options "
-      "too.\n");
-  printf("\n");
-  char short_opt[4];
-  for (size_t i = 0; i < sizeof(options) / sizeof(opt_t); ++i) {
-    opt_t opt = options[i];
-    if (opt.short_name == '\0') {
-      sprintf(short_opt, "   ");
-    } else {
-      sprintf(short_opt, "-%c,", opt.short_name);
-    }
-    printf("  %s --%s%s\t%s\n\n",
-        short_opt,
-        opt.long_name,
-        opt.need_argument ? "=VALUE" : "", opt.description);
-  }
+  printf(LANG_WS__HOW_TO_USE_OPTIONS ".\n\n");
+  // char short_opt[3 + 1];
+  // char long_opt[11];
+  // for (size_t i = 0; i < sizeof(options) / sizeof(opt_t); ++i) {
+  //   opt_t opt = options[i];
+  //   // TODO: handle case where prefix > ws.ws_col
+  //   const size_t long_opt_length = strlen(opt.long_name)
+  //       + (opt.need_argument ? sizeof(LANG_OPT__PARAMETER_VALUE) : 0);
+  //   sprintf(short_opt, opt.short_name == '\0' ? "   " : "-%c,",
+  // opt.short_name);
+  //   if (long_opt_length <= 10) {
+  //     memset(long_opt, 0, sizeof(long_opt));
+  //     sprintf(long_opt, opt.need_argument ? "%s=%s" : "%s",
+  //         opt.long_name, LANG_OPT__PARAMETER_VALUE);
+  //   }
+  //   printf(
+  //       long_opt_length > 10
+  //       ? "  %s --%s%s    "
+  //       : "  %s --%-12s",
+  //       short_opt,
+  //       long_opt_length > 10 ? opt.long_name : long_opt,
+  //       long_opt_length > 10 && opt.need_argument
+  //       ? "=" LANG_OPT__PARAMETER_VALUE
+  //       : "");
+  //   struct winsize ws;
+  //   if (ioctl(0, TIOCGWINSZ, &ws) == -1 || ws.ws_col < 21) {
+  //     ws.ws_col = DEFULT_MAX_TEXT_WIDTH;
+  //   }
+  //   size_t cursor_x_pos = 8 + (long_opt_length > 10 ? long_opt_length + 4 :
+  // 12);
+  //   for (size_t i = 0; opt.description[i] != '\0'; ++i) {
+  //     if (cursor_x_pos >= ws.ws_col) {
+  //       cursor_x_pos = 21;
+  //       printf("%*c\n", 19, ' ');
+  //     }
+  //     putchar(opt.description[i]);
+  //     ++cursor_x_pos;
+  //   }
+  //   printf("\n\n");
+  // }
   print_limits();
   return RETURN_EXIT;
 }
