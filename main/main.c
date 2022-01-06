@@ -214,7 +214,9 @@ dispose:
 }
 
 static void print_usage(const char *exec_name) {
-  printf("%s [OPTION]... FILES\n", exec_name);
+  printf(LANG_OPT__USAGE__USAGE ": %s [" LANG_OPT__USAGE__OPTION "]... "
+      LANG_OPT__USAGE__FILES "\n",
+      exec_name + (strncmp(exec_name, "./", 2) == 0 ? 2 : 0));
 }
 
 static void print_short_description(const char *exec_name) {
@@ -359,7 +361,7 @@ return_type opt__man(
 return_type opt__usage(
     __attribute__((unused)) wsctx_parameters_t *p,
     __attribute__((unused))const char *arg) {
-  print_usage("ws");
+  print_usage(p->exec_name);
   return RETURN_EXIT;
 }
 

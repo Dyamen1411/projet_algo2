@@ -22,3 +22,10 @@
 #define LANG_MESSAGE_WARNING_WORD_SPLICING__STDIN "standard input"
 #define LANG_MESSAGE_WARNING_WORD_SPLICING__AT_LINE "at line"
 #define LANG_MESSAGE_WARNING_WORD_SPLICING__CUT "cut"
+
+//==============================================================================
+
+#define LANG_OPT__USAGE__OPTION "OPTION"
+#define LANG_OPT__USAGE__FILES "FILES"
+
+#define LANG_OPT__USAGE__USAGE "Usage"
