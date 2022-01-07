@@ -368,11 +368,9 @@ word_t *wsctx_add_word(wsctx_t *ctx, char *word) {
       return NULL;
     }
   }
-  // TODO: optimize to O(1) by computing index rather than loop trough array
-  // (O(N))
-  for (size_t i = 0; i < ctx->files.pattern_size; ++i) {
-    w->pattern[i] |= ctx->files.current_pattern[i];
-  }
+  const size_t byte_index = ctx->files.current / BITS_IN_BYTE;
+  const size_t bit_index = ctx->files.current % BITS_IN_BYTE;
+  w->pattern[byte_index] |= (char) (1 << bit_index);
   return w;
 }
 
