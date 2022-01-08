@@ -40,16 +40,7 @@ static return_type opt__usage(wsctx_parameters_t *p, const char *arg);
 static return_type opt__version(wsctx_parameters_t *p, const char *arg);
 
 static opt_t options[] = {
-  {
-    .long_name = "initial",
-    .short_name = 'i',
-    .need_argument = true,
-    .process = opt__initial,
-    .description
-      = "Set the maximal number of significant initial letters for words to "
-        "VALUE. 0 means without limitation. Default is "
-        XSTR(WS_CTX_DEFAULT_OPTION_VALUE__INITIAL) "."
-  },
+  NEW_OPTION(INITIAL, true, opt__initial),
   {
     .long_name = "punctuation-like-space",
     .short_name = 'p',

@@ -27,21 +27,29 @@
 //= Options
 //==============================================================================
 
-// Generic parameter names
+//  Generic parameter names
 #define LANG_OPT__PARAMETER_OPTION "OPTION"
 #define LANG_OPT__PARAMETER_FILES "FILES"
 #define LANG_OPT__PARAMETER_VALUE "VALUE"
 
-// Long option names
+//  Long option names
+#define LANG_OPT_NAME_LONG__INITIAL "initial"
 #define LANG_OPT_NAME_LONG__USAGE "usage"
 
-// Short option names
+//  Short option names
+#define LANG_OPT_NAME_SHORT__INITIAL 'i'
 #define LANG_OPT_NAME_SHORT__USAGE '\0'
 
-// Option descriptions
+//  Option descriptions
+//  TODO@Dyamen1411 :
+//    Change external vales by format instead of direct.
+//    To do so, might add new field to opt_t to pass such values
+#define LANG_OPT_DESCRIPTION__INITIAL "Set the maximal number of significant " \
+  "initial letters for words to VALUE. 0 means without limitation. Default " \
+  "is " XSTR(WS_CTX_DEFAULT_OPTION_VALUE__INITIAL) "."
 #define LANG_OPT_DESCRIPTION__USAGE "Print a short usage message and exit."
 
-// Usage
+//  Usage
 #define LANG_OPT__USAGE__USAGE "Usage"
 
 //==============================================================================
