@@ -100,7 +100,7 @@ static int word_compar_pattern(const word_t **word1, const word_t **word2);
 //  word_compar_count :
 static int word_compar_count(const word_t **word1, const word_t **word2);
 
-int word_compar_word(const word_t **word1, const word_t **word2);
+static int word_compar_word(const word_t **word1, const word_t **word2);
 
 //  TODO: comment min__size_t & print_word
 static size_t min__size_t(size_t a, size_t b);
