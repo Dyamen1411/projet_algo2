@@ -34,10 +34,12 @@
 
 //  Long option names
 #define LANG_OPT_NAME_LONG__INITIAL "initial"
+#define LANG_OPT_NAME_LONG__PUNCTUATION_LIKE_SPACE "punctuation-like-space"
 #define LANG_OPT_NAME_LONG__USAGE "usage"
 
 //  Short option names
 #define LANG_OPT_NAME_SHORT__INITIAL 'i'
+#define LANG_OPT_NAME_SHORT__PUNCTUATION_LIKE_SPACE 'p'
 #define LANG_OPT_NAME_SHORT__USAGE '\0'
 
 //  Option descriptions
@@ -47,6 +49,8 @@
 #define LANG_OPT_DESCRIPTION__INITIAL "Set the maximal number of significant " \
   "initial letters for words to VALUE. 0 means without limitation. Default " \
   "is " XSTR(WS_CTX_DEFAULT_OPTION_VALUE__INITIAL) "."
+#define LANG_OPT_DESCRIPTION__PUNCTUATION_LIKE_SPACE "Make the punctuation " \
+  "characters play the same role as space characters in the meaning of words."
 #define LANG_OPT_DESCRIPTION__USAGE "Print a short usage message and exit."
 
 //  Usage

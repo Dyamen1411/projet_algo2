@@ -41,15 +41,7 @@ static return_type opt__version(wsctx_parameters_t *p, const char *arg);
 
 static opt_t options[] = {
   NEW_OPTION(INITIAL, true, opt__initial),
-  {
-    .long_name = "punctuation-like-space",
-    .short_name = 'p',
-    .need_argument = false,
-    .process = opt__punctuation_like_space,
-    .description
-      = "Make the punctuation characters play the same role as space "
-        "characters in the meaning of words."
-  },
+  NEW_OPTION(PUNCTUATION_LIKE_SPACE, false, opt__punctuation_like_space),
   {
     .long_name = "same-numbers",
     .short_name = 's',
