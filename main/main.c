@@ -19,6 +19,15 @@
 #define STR(x) #x
 #define XSTR(x) STR(x)
 
+#define NEW_OPTION(_name, _need_argument, _process_function) \
+  { \
+    .long_name = LANG_OPT_NAME_LONG__ ## _name, \
+    .short_name = LANG_OPT_NAME_SHORT__ ## _name, \
+    .need_argument = (_need_argument), \
+    .process = (_process_function), \
+    .description = LANG_OPT_DESCRIPTION__ ## _name \
+  }
+
 static return_type opt__help(wsctx_parameters_t *p, const char *arg);
 static return_type opt__initial(wsctx_parameters_t *p, const char *arg);
 static return_type opt__punctuation_like_space(wsctx_parameters_t *p,
@@ -90,13 +99,7 @@ static opt_t options[] = {
     .process = opt__man,
     .description = "Print this help message following man-style and exit."
   },
-  {
-    .long_name = LANG_OPT_NAME_LONG__USAGE,
-    .short_name = LANG_OPT_NAME_SHORT__USAGE,
-    .need_argument = false,
-    .process = opt__usage,
-    .description = LANG_OPT_DESCRIPTION__USAGE
-  },
+  NEW_OPTION(USAGE, false, opt__usage),
   {
     .long_name = "version",
     .short_name = '\0',
