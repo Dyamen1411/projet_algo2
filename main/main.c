@@ -43,16 +43,7 @@ static opt_t options[] = {
   NEW_OPTION(INITIAL, true, opt__initial),
   NEW_OPTION(PUNCTUATION_LIKE_SPACE, false, opt__punctuation_like_space),
   NEW_OPTION(SAME_NUMBER, false, opt__same_numbers),
-  {
-    .long_name = "top",
-    .short_name = 't',
-    .need_argument = true,
-    .process = opt__top,
-    .description
-      = "Set the maximal number of words to print to VALUE. 0 "
-        "means all the words. Default is "
-        XSTR(WS_CTX_DEFAULT_OPTION_VALUE__TOP) "."
-  },
+  NEW_OPTION(TOP, true, opt__top),
   {
     .long_name = "uppercasing",
     .short_name = 'u',
