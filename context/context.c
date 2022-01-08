@@ -131,7 +131,6 @@ wsctx_t *wsctx_initialize(const wsctx_parameters_t *parameters,
   ctx->words.list = NULL;
   ctx->files.names = NULL;
   ctx->files.current_pattern = NULL;
-  //
   ctx->dictionary = holdall_empty();
   if (ctx->dictionary == NULL) {
     goto error;
@@ -213,11 +212,6 @@ return_type wsctx_parse_files(wsctx_t *ctx) {
   return ctx->words.list == NULL
          ? RETURN_ERROR_CAPACITY
          : RETURN_NONE;
-  //  +- old
-  //  | me : 374 477
-  //  | ha : 72 922
-  //  +- new
-  //  | me :
 }
 
 void wsctx_sort_data(wsctx_t *ctx) {
@@ -279,16 +273,13 @@ void wsctx_output_data(wsctx_t *ctx) {
   const size_t limit = ctx->parameters.top == 0
       ? ctx->words.count
       : min__size_t(ctx->words.count, ctx->parameters.top);
-  //
   for (size_t i = 0; i < limit; ++i) {
     print_word(ctx, ctx->words.list[ctx->words.count - i - 1]);
   }
-  //
   if (!ctx->parameters.same_number || ctx->parameters.top == 0) {
     return;
   }
   word_t *model = ctx->words.list[ctx->words.count - limit];
-  //
   for (size_t i = limit; i < ctx->words.count; ++i) {
     if (word_compar_file_appearances((const word_t **) &model,
         (const word_t **) &ctx->words.list[ctx->words.count - i - 1]) != 0
