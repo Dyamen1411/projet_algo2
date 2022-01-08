@@ -138,14 +138,6 @@ int main(int argc, char **argv) {
       case RETURN_NONE:
         break;
     }
-    // printf("%30s: %zu\n", "initial", parameters.initial);
-    // printf("%30s: %s\n", "punctuation like space",
-    //     parameters.punctuation_like_spaces ? "yes" : "no");
-    // printf("%30s: %s\n", "same numbers", parameters.same_number ? "yes"
-    //     : "no");
-    // printf("%30s: %zu\n", "top", parameters.top);
-    // printf("%30s: %s\n", "uppercasing", parameters.uppercasing ? "yes"
-    //     : "no");
   }
   // check if there is at least 2 files
   const size_t file_count = linked_list_size(files);
@@ -337,16 +329,6 @@ return_type opt__help(
 return_type opt__man(
     __attribute__((unused)) wsctx_parameters_t *p,
     __attribute__((unused)) const char *arg) {
-  // // name
-  // printf("\033[1mNAME\033[0m\n\t");
-  // print_short_description("ws");
-  // printf("\n");
-  // // synopsys
-  // printf("\033[1mSYNOPSYS\033[0m\n\t");
-  // print_usage("ws");
-  // printf("\n");
-  // // dexcription
-  // printf("\033[1mDESCRIPTION\033[0m\n\n\t");
   return RETURN_EXIT;
 }
 
