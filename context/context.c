@@ -370,7 +370,8 @@ word_t *wsctx_add_word(wsctx_t *ctx, char *word) {
   return w;
 }
 
-// reopning stdin on POSIX systems : http://ostack.cn/?qa=634510/
+//  Making stdin readable again on POSIX compliant systems :
+//    http://ostack.cn/?qa=634510/
 return_type skip_spaces(FILE *stream, size_t *line_number,
     bool punctuation_like_spaces) {
   int c;
