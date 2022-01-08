@@ -42,13 +42,7 @@ static return_type opt__version(wsctx_parameters_t *p, const char *arg);
 static opt_t options[] = {
   NEW_OPTION(INITIAL, true, opt__initial),
   NEW_OPTION(PUNCTUATION_LIKE_SPACE, false, opt__punctuation_like_space),
-  {
-    .long_name = "same-numbers",
-    .short_name = 's',
-    .need_argument = false,
-    .process = opt__same_numbers,
-    .description = "Print more words than the limit in case of same numbers."
-  },
+  NEW_OPTION(SAME_NUMBER, false, opt__same_numbers),
   {
     .long_name = "top",
     .short_name = 't',
