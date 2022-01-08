@@ -451,12 +451,6 @@ return_type get_next_word(FILE *stream, char **word_buffer, size_t *word_length,
     free(*word_buffer);
     return RETURN_ERROR_IO;
   }
-  // if (c != EOF) {
-  //   if (ungetc(c, stream) == EOF) {
-  //     free(*word_buffer);
-  //     return RETURN_ERROR_IO;
-  //   }
-  // }
   *word_buffer = realloc(*word_buffer, *word_length + 1);
   return *word_buffer == NULL
          ? RETURN_ERROR_CAPACITY
