@@ -217,27 +217,56 @@ dispose:
 }
 
 static void print_usage(const char *exec_name) {
-  printf(LANG_OPT__USAGE__USAGE ": %s [" LANG_OPT__PARAMETER_OPTION "]... "
-      LANG_OPT__PARAMETER_FILES "\n", exec_name);
+  printf(LANG_OPT__USAGE__USAGE ": \033[1m%s\033[0m [" LANG_OPT__PARAMETER_OPTION "]... "
+      LANG_OPT__PARAMETER_FILES "\n",
+      exec_name);
+}
+
+static void print_usage_synopsis(const char *exec_name) {
+  printf("\033[1m%s\033[0m [" LANG_OPT__PARAMETER_OPTION "]... "
+      LANG_OPT__PARAMETER_FILES "\n",
+      exec_name);
+}
+
+static void print_copyright() {
+  printf(LANG_WS__COPYRIHT);
 }
 
 static void print_short_description(const char *exec_name) {
-  printf("%s - " LANG_WS__SHORT_DESCRIPTION "\n", exec_name);
+  printf("\033[1m%s\033[0m - " LANG_WS__SHORT_DESCRIPTION "\n", exec_name);
+}
+
+static void print_long_description(const char *exec_name) {
+  printf("\033[1m%s\033[0m - " LANG_WS__LONG_DESCRIPTION "\n", exec_name);
+}
+
+static void print_help() {
+  char short_opt[4];
+  for (size_t i = 0; i < sizeof(options) / sizeof(opt_t); ++i) {
+    opt_t opt = options[i];
+    if (opt.short_name == '\0') {
+      sprintf(short_opt, "   ");
+    } else {
+      sprintf(short_opt, "-%c,", opt.short_name);
+    }
+    printf("  %s --%s%s\t%s\n\n",
+        short_opt,
+        opt.long_name,
+        opt.need_argument ? "=VALUE" : "", opt.description);
+  }
 }
 
 static void print_limits() {
   printf(
-      "The number of FILES that can be passed must be at least 2. "
-      "The counters of the total number of occurences of the words have "
-      "a maximum value of %zu.\n", sizeof(size_t));
+      LANG_WS__MAN_LIMITS " %zu.\n", sizeof(size_t));
+}
+
+static void print_author() {
+  printf(LANG_WS__AUTHOR_WRITTEN " " LANG_WS__AUTHOR_NAME "\n");
 }
 
 static void print_version(const char *exec_name) {
-  printf("%s - 2022/01/06\n", exec_name);
-}
-
-static void print_copyright() {
-  printf("This is freeware: you can redistribute it. There is NO WARRANTY.");
+  printf("%s - 2022/01/06\n\t", exec_name);
 }
 
 static bool is_digit(char c) {
@@ -322,6 +351,7 @@ return_type opt__help(
   print_short_description(p->exec_name);
   printf("\n");
   printf(LANG_WS__HOW_TO_USE_OPTIONS ".\n\n");
+  print_help();
   // char short_opt[3 + 1];
   // char long_opt[11];
   // for (size_t i = 0; i < sizeof(options) / sizeof(opt_t); ++i) {
@@ -330,7 +360,7 @@ return_type opt__help(
   //   const size_t long_opt_length = strlen(opt.long_name)
   //       + (opt.need_argument ? sizeof(LANG_OPT__PARAMETER_VALUE) : 0);
   //   sprintf(short_opt, opt.short_name == '\0' ? "   " : "-%c,",
-  // opt.short_name);
+  //       opt.short_name);
   //   if (long_opt_length <= 10) {
   //     memset(long_opt, 0, sizeof(long_opt));
   //     sprintf(long_opt, opt.need_argument ? "%s=%s" : "%s",
@@ -349,8 +379,8 @@ return_type opt__help(
   //   if (ioctl(0, TIOCGWINSZ, &ws) == -1 || ws.ws_col < 21) {
   //     ws.ws_col = DEFULT_MAX_TEXT_WIDTH;
   //   }
-  //   size_t cursor_x_pos = 8 + (long_opt_length > 10 ? long_opt_length + 4 :
-  // 12);
+  //   size_t cursor_x_pos = 8 + (long_opt_length > 10 ? long_opt_length + 4
+  //       : 12);
   //   for (size_t i = 0; opt.description[i] != '\0'; ++i) {
   //     if (cursor_x_pos >= ws.ws_col) {
   //       cursor_x_pos = 21;
@@ -373,23 +403,27 @@ return_type opt__man(
   printf("\n");
   // synopsys
   printf("\033[1mSYNOPSYS\033[0m\n\t");
-  print_usage("ws");
+  print_usage_synopsis("ws");
   printf("\n");
   // description
   printf("\033[1mDESCRIPTION\033[0m\n\n\t");
-  // print_long_description("ws");
+  print_long_description("ws");
   printf("\n");
   // options
   printf("\033[1mOPTIONS\033[0m\n\n\t");
   printf("\n");
   // limits
-  printf("\033[1mLIMITS\033[0m\n\n\t");
+  printf("\033[1mLIMITS\033[0m\n\t");
+  print_limits("ws");
   printf("\n");
   // author
-  printf("\033[1mAUTHOR\033[0m\n\n\t");
+  printf("\033[1mAUTHOR\033[0m\n\t");
+  print_author();
   printf("\n");
   // copyright
-  printf("\033[1mCOPYRIGHT\033[0m\n\n\t");
+  printf("\033[1mCOPYRIGHT\033[0m\n\t");
+  print_version("ws");
+  print_copyright("ws");
   printf("\n");
   return RETURN_EXIT;
 }
