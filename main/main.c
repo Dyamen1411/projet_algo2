@@ -91,11 +91,11 @@ static opt_t options[] = {
     .description = "Print this help message following man-style and exit."
   },
   {
-    .long_name = "usage",
-    .short_name = '\0',
+    .long_name = LANG_OPT_NAME_LONG__USAGE,
+    .short_name = LANG_OPT_NAME_SHORT__USAGE,
     .need_argument = false,
     .process = opt__usage,
-    .description = "Print a short usage message and exit."
+    .description = LANG_OPT_DESCRIPTION__USAGE
   },
   {
     .long_name = "version",

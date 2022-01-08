@@ -27,13 +27,19 @@
 //= Options
 //==============================================================================
 
-// Generic parameter name
+// Generic parameter names
 #define LANG_OPT__PARAMETER_OPTION "OPTION"
 #define LANG_OPT__PARAMETER_FILES "FILES"
 #define LANG_OPT__PARAMETER_VALUE "VALUE"
 
-// Option name
+// Long option names
 #define LANG_OPT_NAME_LONG__USAGE "usage"
+
+// Short option names
+#define LANG_OPT_NAME_SHORT__USAGE '\0'
+
+// Option descriptions
+#define LANG_OPT_DESCRIPTION__USAGE "Print a short usage message and exit."
 
 // Usage
 #define LANG_OPT__USAGE__USAGE "Usage"
