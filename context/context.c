@@ -206,7 +206,6 @@ return_type wsctx_parse_files(wsctx_t *ctx) {
       return res;
     }
   }
-  return RETURN_NONE;
   ctx->words.list = (word_t **) realloc(ctx->words.list,
       ctx->words.count * sizeof(word_t *));
   return ctx->words.list == NULL
