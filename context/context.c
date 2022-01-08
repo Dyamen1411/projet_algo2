@@ -50,7 +50,17 @@ typedef int (*getc_fun)(FILE *);
 //  Prototypes
 //==============================================================================
 
-//  wsctx_parse_next_file :
+//  TODO@Dyamen1411 TODO@KarolinaK25 :
+//    Add comment to following functions :
+//      [-] wsctx_parse_next_file
+//      [-] getc_stream
+//      [-] getc_stdin
+//      [-] fclose_stream
+//      [-] fclose_stdin
+//      [-] word_compar_file_appearances
+//      [-] word_compar_pattern
+//      [-] word_compar_count
+//      [-] word_compar_word
 static return_type wsctx_parse_next_file(wsctx_t *ctx);
 
 //  skip_spaces : passe tous les characteres consideres comme un espace dans le
@@ -82,7 +92,6 @@ static void wsctx_prepare_next_file(wsctx_t *ctx);
 //  strhash : renvoie un hash de la chaine de caractere pointee par s.
 static size_t strhash(const char *s);
 
-//  TODO: comment getc_* & fclose_*
 static int getc_stream(FILE *stream);
 static int getc_stdin(__attribute__((unused)) FILE *stream);
 static int fclose_stream(FILE *stream);
@@ -94,12 +103,8 @@ static bool is_space(int c, bool punctuation_like_spaces);
 static int word_compar_file_appearances(const word_t **word1,
     const word_t **word2);
 
-//  word_compar_pattern :
 static int word_compar_pattern(const word_t **word1, const word_t **word2);
-
-//  word_compar_count :
 static int word_compar_count(const word_t **word1, const word_t **word2);
-
 static int word_compar_word(const word_t **word1, const word_t **word2);
 
 //  TODO: comment min__size_t & print_word
