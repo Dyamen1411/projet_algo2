@@ -15,6 +15,9 @@
 //  Structures
 //==============================================================================
 
+// TODO@Dyamen1411 TODO@KarolinaK25 :
+//  Add comments to explain structures
+
 typedef struct word_t {
   char *word;
   size_t count;
@@ -51,7 +54,7 @@ typedef int (*getc_fun)(FILE *);
 //==============================================================================
 
 //  TODO@Dyamen1411 TODO@KarolinaK25 :
-//    Add comment to following functions :
+//    Add comment to explain following functions :
 //      [-] wsctx_parse_next_file
 //      [-] getc_stream
 //      [-] getc_stdin
