@@ -285,7 +285,6 @@ return_type parse_arguments(int argc, char **argv,
   return RETURN_NONE;
 }
 
-//TODO: pass whole argv to opt function
 return_type opt__initial(wsctx_parameters_t *p, const char *arg) {
   if (*arg == '\0') {
     return RETURN_ERROR_OPT_ARGUMENT;
