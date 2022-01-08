@@ -598,7 +598,7 @@ int word_compar_word(const word_t **word1, const word_t **word2) {
   return strcmp((*word2)->word, (*word1)->word);
 }
 
-static size_t min__size_t(size_t a, size_t b) {
+size_t min__size_t(size_t a, size_t b) {
   return a < b ? a : b;
 }
 
