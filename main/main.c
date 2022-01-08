@@ -45,13 +45,7 @@ static opt_t options[] = {
   NEW_OPTION(SAME_NUMBER, false, opt__same_numbers),
   NEW_OPTION(TOP, true, opt__top),
   NEW_OPTION(UPPERCASING, false, opt__uppercasing),
-  {
-    .long_name = "help",
-    .short_name = '?',
-    .need_argument = false,
-    .process = opt__help,
-    .description = "Print this help message and exit."
-  },
+  NEW_OPTION(HELP, false, opt__help),
   {
     .long_name = "man",
     .short_name = '\0',

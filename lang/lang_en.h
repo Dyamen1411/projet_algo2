@@ -38,6 +38,7 @@
 #define LANG_OPT_NAME_LONG__SAME_NUMBER "same-number"
 #define LANG_OPT_NAME_LONG__TOP "top"
 #define LANG_OPT_NAME_LONG__UPPERCASING "uppercasing"
+#define LANG_OPT_NAME_LONG__HELP "help"
 #define LANG_OPT_NAME_LONG__USAGE "usage"
 
 //  Short option names
@@ -46,6 +47,7 @@
 #define LANG_OPT_NAME_SHORT__SAME_NUMBER 's'
 #define LANG_OPT_NAME_SHORT__TOP 't'
 #define LANG_OPT_NAME_SHORT__UPPERCASING 'u'
+#define LANG_OPT_NAME_SHORT__HELP '?'
 #define LANG_OPT_NAME_SHORT__USAGE '\0'
 
 //  Option descriptions
@@ -64,6 +66,7 @@
   XSTR(WS_CTX_DEFAULT_OPTION_VALUE__TOP) "."
 #define LANG_OPT_DESCRIPTION__UPPERCASING "Convert each lowercase letter of " \
   "words to the corresponding uppercase letter."
+#define LANG_OPT_DESCRIPTION__HELP "Print this help message and exit."
 #define LANG_OPT_DESCRIPTION__USAGE "Print a short usage message and exit."
 
 //  Usage
