@@ -77,7 +77,7 @@ static word_t *wsctx_add_word(wsctx_t *ctx, char *word);
 
 //  wsctx_prepare_next_file : prepare le motif et l'index du prochain fichier
 //    dans la liste des fichiers du context pointe par ctx
-void wsctx_prepare_next_file(wsctx_t *ctx);
+static void wsctx_prepare_next_file(wsctx_t *ctx);
 
 //  strhash : renvoie un hash de la chaine de caractere pointee par s.
 static size_t strhash(const char *s);
