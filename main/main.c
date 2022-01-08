@@ -46,13 +46,7 @@ static opt_t options[] = {
   NEW_OPTION(TOP, true, opt__top),
   NEW_OPTION(UPPERCASING, false, opt__uppercasing),
   NEW_OPTION(HELP, false, opt__help),
-  {
-    .long_name = "man",
-    .short_name = '\0',
-    .need_argument = false,
-    .process = opt__man,
-    .description = "Print this help message following man-style and exit."
-  },
+  NEW_OPTION(MAN, false, opt__man),
   NEW_OPTION(USAGE, false, opt__usage),
   {
     .long_name = "version",
