@@ -450,8 +450,9 @@ return_type get_next_word(FILE *stream, char **word_buffer, size_t *word_length,
 
 inline void wsctx_prepare_next_file(wsctx_t *ctx) {
   // evil bithack to update pattern
-  *(short *) (ctx->files.current_pattern
-  + (ctx->files.current / BITS_IN_BYTE)) <<= 1;
+  short *interesting_byte = (short *) (ctx->files.current_pattern
+      + (ctx->files.current / BITS_IN_BYTE));
+  *interesting_byte = (short) (*interesting_byte << 1);
   ++ctx->files.current;
 }
 
