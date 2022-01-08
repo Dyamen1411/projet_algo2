@@ -574,14 +574,6 @@ int word_compar_pattern(const word_t **word1, const word_t **word2) {
   if (res != 0) {
     return res;
   }
-#ifdef WS_FINER_PATTERN_COMPAR
-  for (size_t i = pattern_size - 1; i != (size_t) (-1); --i) {
-    if ((*word1)->pattern[i] != (*word2)->pattern[i]) {
-      return ((*word1)->pattern[i] > (*word2)->pattern[i])
-             - ((*word1)->pattern[i] < (*word2)->pattern[i]);
-    }
-  }
-#endif
   return 0;
 }
 
