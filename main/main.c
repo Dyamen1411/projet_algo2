@@ -142,16 +142,6 @@ int main(int argc, char **argv) {
       default:
         goto error_unexpected;
     }
-#ifdef DEBUG
-    printf("%30s: %zu\n", "initial", parameters.initial);
-    printf("%30s: %s\n", "punctuation like space",
-        parameters.punctuation_like_spaces ? "yes" : "no");
-    printf("%30s: %s\n", "same numbers", parameters.same_number ? "yes"
-        : "no");
-    printf("%30s: %zu\n", "top", parameters.top);
-    printf("%30s: %s\n", "uppercasing", parameters.uppercasing ? "yes"
-        : "no");
-#endif
   }
   // check if there is at least 2 files
   const size_t file_count = linked_list_size(files);
