@@ -235,11 +235,10 @@ return_type wsctx_parse_files(wsctx_t *ctx) {
 
 void wsctx_sort_data(wsctx_t *ctx) {
   // Sort by pattern
-  // Sort by count
-  // Sort by lexical reverse order
   pattern_size = ctx->files.pattern_size;
   qsort(ctx->words.list, ctx->words.count, sizeof(word_t *),
       (int (*) (const void *, const void *)) word_compar_pattern);
+  // Sort by count
   word_t **base = ctx->words.list;
   size_t count = 1;
   word_t *previous = ctx->words.list[0];
@@ -257,6 +256,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
   }
   qsort(base, count, sizeof(word_t *),
       (int (*) (const void *, const void *)) word_compar_count);
+  // Sort by lexical reverse order
   base = ctx->words.list;
   count = 1;
   previous = ctx->words.list[0];
