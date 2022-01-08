@@ -37,6 +37,7 @@
 #define LANG_OPT_NAME_LONG__PUNCTUATION_LIKE_SPACE "punctuation-like-space"
 #define LANG_OPT_NAME_LONG__SAME_NUMBER "same-number"
 #define LANG_OPT_NAME_LONG__TOP "top"
+#define LANG_OPT_NAME_LONG__UPPERCASING "uppercasing"
 #define LANG_OPT_NAME_LONG__USAGE "usage"
 
 //  Short option names
@@ -44,6 +45,7 @@
 #define LANG_OPT_NAME_SHORT__PUNCTUATION_LIKE_SPACE 'p'
 #define LANG_OPT_NAME_SHORT__SAME_NUMBER 's'
 #define LANG_OPT_NAME_SHORT__TOP 't'
+#define LANG_OPT_NAME_SHORT__UPPERCASING 'u'
 #define LANG_OPT_NAME_SHORT__USAGE '\0'
 
 //  Option descriptions
@@ -60,6 +62,8 @@
 #define LANG_OPT_DESCRIPTION__TOP "Set the maximal number of words to print " \
   "to VALUE. 0 means all the words. Default is " \
   XSTR(WS_CTX_DEFAULT_OPTION_VALUE__TOP) "."
+#define LANG_OPT_DESCRIPTION__UPPERCASING "Convert each lowercase letter of " \
+  "words to the corresponding uppercase letter."
 #define LANG_OPT_DESCRIPTION__USAGE "Print a short usage message and exit."
 
 //  Usage

@@ -44,15 +44,7 @@ static opt_t options[] = {
   NEW_OPTION(PUNCTUATION_LIKE_SPACE, false, opt__punctuation_like_space),
   NEW_OPTION(SAME_NUMBER, false, opt__same_numbers),
   NEW_OPTION(TOP, true, opt__top),
-  {
-    .long_name = "uppercasing",
-    .short_name = 'u',
-    .need_argument = false,
-    .process = opt__uppercasing,
-    .description
-      = "Convert each lowercase letter of words to the "
-        "corresponding uppercase letter."
-  },
+  NEW_OPTION(UPPERCASING, false, opt__uppercasing),
   {
     .long_name = "help",
     .short_name = '?',
