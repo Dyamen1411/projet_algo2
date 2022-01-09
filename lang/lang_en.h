@@ -27,15 +27,56 @@
 //= Options
 //==============================================================================
 
-// Generic parameter name
+//  Generic parameter names
 #define LANG_OPT__PARAMETER_OPTION "OPTION"
 #define LANG_OPT__PARAMETER_FILES "FILES"
 #define LANG_OPT__PARAMETER_VALUE "VALUE"
 
-// Option name
+//  Long option names
+#define LANG_OPT_NAME_LONG__INITIAL "initial"
+#define LANG_OPT_NAME_LONG__PUNCTUATION_LIKE_SPACE "punctuation-like-space"
+#define LANG_OPT_NAME_LONG__SAME_NUMBER "same-number"
+#define LANG_OPT_NAME_LONG__TOP "top"
+#define LANG_OPT_NAME_LONG__UPPERCASING "uppercasing"
+#define LANG_OPT_NAME_LONG__HELP "help"
+#define LANG_OPT_NAME_LONG__MAN "man"
 #define LANG_OPT_NAME_LONG__USAGE "usage"
+#define LANG_OPT_NAME_LONG__VERSION "version"
 
-// Usage
+//  Short option names
+#define LANG_OPT_NAME_SHORT__INITIAL 'i'
+#define LANG_OPT_NAME_SHORT__PUNCTUATION_LIKE_SPACE 'p'
+#define LANG_OPT_NAME_SHORT__SAME_NUMBER 's'
+#define LANG_OPT_NAME_SHORT__TOP 't'
+#define LANG_OPT_NAME_SHORT__UPPERCASING 'u'
+#define LANG_OPT_NAME_SHORT__HELP '?'
+#define LANG_OPT_NAME_SHORT__MAN '\0'
+#define LANG_OPT_NAME_SHORT__USAGE '\0'
+#define LANG_OPT_NAME_SHORT__VERSION '\0'
+
+//  Option descriptions
+//  TODO@Dyamen1411 :
+//    Change external vales by format instead of direct.
+//    To do so, might add new field to opt_t to pass such values
+#define LANG_OPT_DESCRIPTION__INITIAL "Set the maximal number of significant " \
+  "initial letters for words to VALUE. 0 means without limitation. Default " \
+  "is " XSTR(WS_CTX_DEFAULT_OPTION_VALUE__INITIAL) "."
+#define LANG_OPT_DESCRIPTION__PUNCTUATION_LIKE_SPACE "Make the punctuation " \
+  "characters play the same role as space characters in the meaning of words."
+#define LANG_OPT_DESCRIPTION__SAME_NUMBER "Print more words than the limit " \
+  "in case of same numbers."
+#define LANG_OPT_DESCRIPTION__TOP "Set the maximal number of words to print " \
+  "to VALUE. 0 means all the words. Default is " \
+  XSTR(WS_CTX_DEFAULT_OPTION_VALUE__TOP) "."
+#define LANG_OPT_DESCRIPTION__UPPERCASING "Convert each lowercase letter of " \
+  "words to the corresponding uppercase letter."
+#define LANG_OPT_DESCRIPTION__HELP "Print this help message and exit."
+#define LANG_OPT_DESCRIPTION__MAN "Print this help message following " \
+  "man-style and exit."
+#define LANG_OPT_DESCRIPTION__USAGE "Print a short usage message and exit."
+#define LANG_OPT_DESCRIPTION__VERSION "Print version information."
+
+//  Usage
 #define LANG_OPT__USAGE__USAGE "Usage"
 
 //==============================================================================

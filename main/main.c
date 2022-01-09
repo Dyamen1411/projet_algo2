@@ -14,10 +14,21 @@
 #include <string.h>
 #include <sys/ioctl.h>
 
+#define LOCAL_DIRECTORY_PREFIX "./"
+
 #define DEFULT_MAX_TEXT_WIDTH 80
 
 #define STR(x) #x
 #define XSTR(x) STR(x)
+
+#define NEW_OPTION(_name, _need_argument, _process_function) \
+  { \
+    .long_name = LANG_OPT_NAME_LONG__ ## _name, \
+    .short_name = LANG_OPT_NAME_SHORT__ ## _name, \
+    .need_argument = (_need_argument), \
+    .process = (_process_function), \
+    .description = LANG_OPT_DESCRIPTION__ ## _name \
+  }
 
 static return_type opt__help(wsctx_parameters_t *p, const char *arg);
 static return_type opt__initial(wsctx_parameters_t *p, const char *arg);
@@ -31,79 +42,15 @@ static return_type opt__usage(wsctx_parameters_t *p, const char *arg);
 static return_type opt__version(wsctx_parameters_t *p, const char *arg);
 
 static opt_t options[] = {
-  {
-    .long_name = "initial",
-    .short_name = 'i',
-    .need_argument = true,
-    .process = opt__initial,
-    .description
-      = "Set the maximal number of significant initial letters for words to "
-        "VALUE. 0 means without limitation. Default is "
-        XSTR(WS_CTX_DEFAULT_OPTION_VALUE__INITIAL) "."
-  },
-  {
-    .long_name = "punctuation-like-space",
-    .short_name = 'p',
-    .need_argument = false,
-    .process = opt__punctuation_like_space,
-    .description
-      = "Make the punctuation characters play the same role as space "
-        "characters in the meaning of words."
-  },
-  {
-    .long_name = "same-numbers",
-    .short_name = 's',
-    .need_argument = false,
-    .process = opt__same_numbers,
-    .description = "Print more words than the limit in case of same numbers."
-  },
-  {
-    .long_name = "top",
-    .short_name = 't',
-    .need_argument = true,
-    .process = opt__top,
-    .description
-      = "Set the maximal number of words to print to VALUE. 0 "
-        "means all the words. Default is "
-        XSTR(WS_CTX_DEFAULT_OPTION_VALUE__TOP) "."
-  },
-  {
-    .long_name = "uppercasing",
-    .short_name = 'u',
-    .need_argument = false,
-    .process = opt__uppercasing,
-    .description
-      = "Convert each lowercase letter of words to the "
-        "corresponding uppercase letter."
-  },
-  {
-    .long_name = "help",
-    .short_name = '?',
-    .need_argument = false,
-    .process = opt__help,
-    .description = "Print this help message and exit."
-  },
-  {
-    .long_name = "man",
-    .short_name = '\0',
-    .need_argument = false,
-    .process = opt__man,
-    .description = "Print this help message following man-style and exit."
-  },
-  {
-    .long_name = "usage",
-    .short_name = '\0',
-    .need_argument = false,
-    .process = opt__usage,
-    .description = "Print a short usage message and exit."
-  },
-  {
-    .long_name = "version",
-    .short_name = '\0',
-    .need_argument = false,
-    .process = opt__version,
-    .description = "Print version information."
-  },
+  NEW_OPTION(INITIAL, true, opt__initial),
+  NEW_OPTION(PUNCTUATION_LIKE_SPACE, false, opt__punctuation_like_space),
+  NEW_OPTION(SAME_NUMBER, false, opt__same_numbers),
+  NEW_OPTION(TOP, true, opt__top),
+  NEW_OPTION(UPPERCASING, false, opt__uppercasing),
+  NEW_OPTION(HELP, false, opt__help),
+  NEW_OPTION(MAN, false, opt__man),
+  NEW_OPTION(USAGE, false, opt__usage),
+  NEW_OPTION(VERSION, false, opt__version)
 };
 
 static return_type parse_arguments(int argc, char **argv,
@@ -120,7 +67,8 @@ int main(int argc, char **argv) {
   }
   // context parameters initialization
   {
-    parameters.exec_name = argv[0] + (strncmp(argv[0], "./", 2) == 0 ? 2 : 0);
+    parameters.exec_name
+      = argv[0] + (strncmp(argv[0], LOCAL_DIRECTORY_PREFIX, 2) == 0 ? 2 : 0);
     int last_index;
     wsctx_parameters_default_initialization(&parameters);
     switch (parse_arguments(argc, argv, &parameters, files, &last_index)) {
@@ -142,16 +90,6 @@ int main(int argc, char **argv) {
       default:
         goto error_unexpected;
     }
-#ifdef DEBUG
-    printf("%30s: %zu\n", "initial", parameters.initial);
-    printf("%30s: %s\n", "punctuation like space",
-        parameters.punctuation_like_spaces ? "yes" : "no");
-    printf("%30s: %s\n", "same numbers", parameters.same_number ? "yes"
-        : "no");
-    printf("%30s: %zu\n", "top", parameters.top);
-    printf("%30s: %s\n", "uppercasing", parameters.uppercasing ? "yes"
-        : "no");
-#endif
   }
   // check if there is at least 2 files
   const size_t file_count = linked_list_size(files);

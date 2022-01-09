@@ -11,6 +11,9 @@
 #define LANG EN
 #endif
 
+#define STR(x) #x
+#define XSTR(x) STR(x)
+
 #if (LANG == EN)
 #include "lang_en.h"
 #elif (LANG == FR)
@@ -20,6 +23,9 @@
 #elif (LANG == IT)
 #include "lang_it.h"
 #endif
+
+#undef XSTR
+#undef STR
 
 #undef IT
 #undef PL

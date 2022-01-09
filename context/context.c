@@ -16,6 +16,9 @@
 //  Structures
 //==============================================================================
 
+// TODO@Dyamen1411 TODO@KarolinaK25 :
+//  Add comments to explain structures
+
 typedef struct word_t {
   char *word;
   size_t count;
@@ -45,11 +48,23 @@ struct wsctx_t {
   const char *error_message;
 };
 
+typedef int (*getc_fun)(FILE *);
+
 //==============================================================================
 //  Prototypes
 //==============================================================================
 
-//  wsctx_parse_next_file :
+//  TODO@Dyamen1411 TODO@KarolinaK25 :
+//    Add comment to explain following functions :
+//      [-] wsctx_parse_next_file
+//      [-] getc_stream
+//      [-] getc_stdin
+//      [-] fclose_stream
+//      [-] fclose_stdin
+//      [-] word_compar_file_appearances
+//      [-] word_compar_pattern
+//      [-] word_compar_count
+//      [-] word_compar_word
 static return_type wsctx_parse_next_file(wsctx_t *ctx);
 
 //  skip_spaces : passe tous les characteres consideres comme un espace dans le
@@ -57,16 +72,16 @@ static return_type wsctx_parse_next_file(wsctx_t *ctx);
 //    est repere. Revoie RETURN_ERROR_IO en cas d'erreur sur le flot controle
 //    par stream, RETURN_EXIT si le dernier charactere lu est EOF, RETURN_NONE
 //    sinon
-static return_type skip_spaces(FILE *stream, size_t *line_number,
-    bool punctuation_like_spaces);
+static return_type skip_spaces(FILE *stream, getc_fun _getc,
+    size_t *line_number, bool punctuation_like_spaces);
 
 //  get_next_word : lis le prochain MOT de stream dans *word_buffer et la taille
 //    de ce mot sera enregistree dans *word_length. Retourne
 //    RETURN_ERROR_CAPACITY en cas de depassement de capacites, RETURN_ERROR_IO
 //    en cas d'erreur sur le flot controle par stream , RETURN_NONE si non.
-static return_type get_next_word(FILE *stream, char **word_buffer,
-    size_t *word_length, size_t default_capacity, bool uppercasing,
-    bool punctuation_like_spaces);
+static return_type get_next_word(FILE *stream, getc_fun _getc,
+    char **word_buffer, size_t *word_length, size_t default_capacity,
+    bool uppercasing, bool punctuation_like_spaces);
 
 //  wsctx_add_word_to_dictionnary : ajoute la chaine de charactere pointee par
 //    word au dictionnaire. Retourne NULL en cas de passement de capacites, un
@@ -76,7 +91,15 @@ static word_t *wsctx_add_word(wsctx_t *ctx, char *word);
 
 //  wsctx_prepare_next_file : prepare le motif et l'index du prochain fichier
 //    dans la liste des fichiers du context pointe par ctx
-void wsctx_prepare_next_file(wsctx_t *ctx);
+static void wsctx_prepare_next_file(wsctx_t *ctx);
+
+//  strhash : renvoie un hash de la chaine de caractere pointee par s.
+static size_t strhash(const char *s);
+
+static int getc_stream(FILE *stream);
+static int getc_stdin(__attribute__((unused)) FILE *stream);
+static int fclose_stream(FILE *stream);
+static int fclose_stdin(__attribute__((unused)) FILE *stream);
 
 //  is_space : indique si le charactere c est considere comme un espace ou non.
 static bool is_space(int c, bool punctuation_like_spaces);
@@ -84,22 +107,19 @@ static bool is_space(int c, bool punctuation_like_spaces);
 static int word_compar_file_appearances(const word_t **word1,
     const word_t **word2);
 
-//  word_compar_pattern :
 static int word_compar_pattern(const word_t **word1, const word_t **word2);
-
-//  word_compar_count :
 static int word_compar_count(const word_t **word1, const word_t **word2);
+static int word_compar_word(const word_t **word1, const word_t **word2);
 
-int word_compar_word(const word_t **word1, const word_t **word2);
+//  TODO: comment min__size_t & print_word
+static size_t min__size_t(size_t a, size_t b);
+static void print_word(wsctx_t *ctx, word_t *word);
 
 //  r_free : libere les ressources allouees a ptr et renvoie 0.
 static int r_free(void *ptr);
 
 //  r_free_word : libere les ressources allouees a word et renvoie 0.
 static int r_free_word(word_t *word);
-
-//  strhash : renvoie un hash de la chaine de caractere pointee par s.
-static size_t strhash(const char *s);
 
 //==============================================================================
 // Variables globales
@@ -132,7 +152,6 @@ wsctx_t *wsctx_initialize(const wsctx_parameters_t *parameters,
   ctx->words.list = NULL;
   ctx->files.names = NULL;
   ctx->files.current_pattern = NULL;
-  //
   ctx->dictionary = holdall_empty();
   if (ctx->dictionary == NULL) {
     goto error;
@@ -216,6 +235,9 @@ return_type wsctx_parse_files(wsctx_t *ctx) {
 }
 
 void wsctx_sort_data(wsctx_t *ctx) {
+  // Sort by pattern
+  // Sort by count
+  // Sort by lexical reverse order
   pattern_size = ctx->files.pattern_size;
   qsort(ctx->words.list, ctx->words.count, sizeof(word_t *),
       (int (*) (const void *, const void *)) word_compar_pattern);
@@ -257,33 +279,17 @@ void wsctx_sort_data(wsctx_t *ctx) {
       (int (*) (const void *, const void *)) word_compar_word);
 }
 
-static void print_word(wsctx_t *ctx, word_t *word) {
-  for (size_t i = 0; i < ctx->files.count; ++i) {
-    printf("%c",
-        ((word->pattern[(i / BITS_IN_BYTE)]
-        >> (i % BITS_IN_BYTE)) & 1) ? 'x' : '-');
-  }
-  printf("\t%zu\t%s\n", word->count, word->word);
-}
-
-static size_t min__size_t(size_t a, size_t b) {
-  return a < b ? a : b;
-}
-
 void wsctx_output_data(wsctx_t *ctx) {
   const size_t limit = ctx->parameters.top == 0
       ? ctx->words.count
       : min__size_t(ctx->words.count, ctx->parameters.top);
-  //
   for (size_t i = 0; i < limit; ++i) {
     print_word(ctx, ctx->words.list[ctx->words.count - i - 1]);
   }
-  //
   if (!ctx->parameters.same_number || ctx->parameters.top == 0) {
     return;
   }
   word_t *model = ctx->words.list[ctx->words.count - limit];
-  //
   for (size_t i = limit; i < ctx->words.count; ++i) {
     if (word_compar_file_appearances((const word_t **) &model,
         (const word_t **) &ctx->words.list[ctx->words.count - i - 1]) != 0
@@ -321,6 +327,168 @@ void wsctx_dispose(wsctx_t **ctx) {
 //==============================================================================
 //  Corps des prototypes declares dans context.c
 //==============================================================================
+
+return_type wsctx_parse_next_file(wsctx_t *ctx) {
+  const char *file_name = ctx->files.names[ctx->files.current];
+  const bool is_file = *file_name != '\0';
+  return_type res = RETURN_NONE;
+  // opening stream
+  FILE *stream = is_file
+      ? fopen(file_name, "r")
+      : stdin;
+  if (is_file && stream == NULL) {
+    ctx->error_message = file_name;
+    return RETURN_ERROR_UNACCESSIBLE_FILE;
+  }
+  int (*_getc)(FILE *) = is_file
+      ? getc_stream
+      : getc_stdin;
+  int (*_fclose)(FILE *) = is_file
+      ? fclose_stream
+      : fclose_stdin;
+  // searching for words in stream
+  size_t line_number = 1;
+  while (!feof(stream)) {
+    // skip spaces and punctuation if -p is specified
+    res = skip_spaces(stream, _getc, &line_number,
+        ctx->parameters.punctuation_like_spaces);
+    if (res != RETURN_NONE) {
+      _fclose(stream);
+      if (res == RETURN_EXIT) {
+        break;
+      }
+      ctx->error_message = file_name;
+      return RETURN_ERROR_IO;
+    }
+    // retrieve word into word buffer
+    size_t word_length = 0;
+    char *word_buffer = NULL;
+    res = get_next_word(stream, _getc, &word_buffer, &word_length,
+        ctx->parameters.initial, ctx->parameters.uppercasing,
+        ctx->parameters.punctuation_like_spaces);
+    if (res != RETURN_NONE) {
+      _fclose(stream);
+      if (res == RETURN_ERROR_CAPACITY) {
+        return RETURN_ERROR_CAPACITY;
+      }
+      ctx->error_message = file_name;
+      return RETURN_ERROR_IO;
+    }
+    // printing warning message if word is sliced
+    if (ctx->parameters.initial != 0
+        && word_length >= ctx->parameters.initial) {
+      word_buffer[ctx->parameters.initial] = '\0';
+      fprintf(stderr, "%s: " LANG_MESSAGE_WARNING_WORD_SPLICING__WORD_FROM " ",
+          ctx->parameters.exec_name);
+      if (*file_name == '\0') {
+        fprintf(stderr, LANG_MESSAGE_WARNING_WORD_SPLICING__STDIN);
+      } else {
+        fprintf(stderr, "'%s'", file_name);
+      }
+      fprintf(stderr,
+          " " LANG_MESSAGE_WARNING_WORD_SPLICING__AT_LINE " %zu "
+          LANG_MESSAGE_WARNING_WORD_SPLICING__CUT ": '%s...'.\n", line_number,
+          word_buffer);
+    }
+    // adding word to context
+    word_t *word = wsctx_add_word(ctx, word_buffer);
+    if (word == NULL) {
+      free(word_buffer);
+      _fclose(stream);
+      return RETURN_ERROR_CAPACITY;
+    }
+    if (word->count != 0) {
+      free(word_buffer);
+    }
+    ++word->count;
+  }
+  // Close the stream (if it's not stdin)
+  if (_fclose(stream) == EOF) {
+    ctx->error_message = file_name;
+    return RETURN_ERROR_IO;
+  }
+  wsctx_prepare_next_file(ctx);
+  return RETURN_NONE;
+}
+
+//  Making stdin readable again on POSIX compliant systems :
+//    http://ostack.cn/?qa=634510/
+return_type skip_spaces(FILE *stream, getc_fun _getc, size_t *line_number,
+    bool punctuation_like_spaces) {
+  int c;
+  while (1) {
+    c = _getc(stream);
+    if (c == EOF || !is_space(c, punctuation_like_spaces)) {
+      break;
+    }
+    if (c == '\n') {
+      ++*line_number;
+    }
+  }
+  if (c != EOF) {
+    return ungetc(c, stream) == EOF
+           ? RETURN_ERROR_IO
+           : RETURN_NONE;
+  }
+  if (ferror(stream)) {
+    return RETURN_ERROR_IO;
+  }
+  if (stream == stdin) {
+    clearerr(stream);
+  }
+  return RETURN_EXIT;
+}
+
+return_type get_next_word(FILE *stream, getc_fun _getc, char **word_buffer,
+    size_t *word_length, size_t default_capacity, bool uppercasing,
+    bool punctuation_like_spaces) {
+  // Initialization
+  const bool word_not_capped = default_capacity == 0;
+  size_t word_buffer_capacity = (word_not_capped
+      ? WS_CTX_DEFAULT_OPTION_VALUE__INITIAL
+      : default_capacity);
+  *word_buffer = (char *) malloc(word_buffer_capacity + 1);
+  if (*word_buffer == NULL) {
+    return RETURN_ERROR_CAPACITY;
+  }
+  memset(*word_buffer, 0, word_buffer_capacity);
+  *word_length = 0;
+  //retrieving word
+  int c;
+  while (1) {
+    c = _getc(stream);
+    if (c == EOF || is_space(c, punctuation_like_spaces)) {
+      break;
+    }
+    // Extend word buffer capacity if needed (always leave one byte free for
+    //  the null terminator)
+    if (word_not_capped && *word_length == word_buffer_capacity) {
+      word_buffer_capacity = word_buffer_capacity * 2 + 1;
+      *word_buffer = (char *) realloc(*word_buffer, word_buffer_capacity + 1);
+      if (*word_buffer == NULL) {
+        return RETURN_ERROR_CAPACITY;
+      }
+      memset(*word_buffer + *word_length + 1, 0,
+          word_buffer_capacity - *word_length - 1);
+    }
+    // If word has infinite capacity or space remaining, append char to word
+    if (word_not_capped || *word_length <= word_buffer_capacity) {
+      (*word_buffer)[*word_length] = (char) (uppercasing ? toupper(c) : c);
+      ++*word_length;
+    }
+  }
+  if (ferror(stream)) {
+    free(*word_buffer);
+    return RETURN_ERROR_IO;
+  }
+  if (c == EOF && stream == stdin) {
+    clearerr(stream);
+  }
+  *word_buffer = realloc(*word_buffer, *word_length + 1);
+  return *word_buffer == NULL
+         ? RETURN_ERROR_CAPACITY
+         : RETURN_NONE;
+}
 
 word_t *wsctx_add_word(wsctx_t *ctx, char *word) {
   word_t *w = (word_t *) hashtable_search(ctx->table, (const void *) word);
@@ -374,190 +542,17 @@ word_t *wsctx_add_word(wsctx_t *ctx, char *word) {
   return w;
 }
 
-// reopning stdin on POSIX systems : http://ostack.cn/?qa=634510/
-return_type skip_spaces(FILE *stream, size_t *line_number,
-    bool punctuation_like_spaces) {
-  int c;
-  while (1) {
-    c = fgetc(stream);
-    if (c == EOF || !is_space(c, punctuation_like_spaces)) {
-      break;
-    }
-    if (c == '\n') {
-      ++*line_number;
-    }
-  }
-  if (c == EOF && stream == stdin) {
-    clearerr(stream);
-  }
-  if (ferror(stream)) {
-    return RETURN_ERROR_IO;
-  }
-  if (c == EOF) {
-    return RETURN_EXIT;
-  }
-  if (ungetc(c, stream) == EOF) {
-    return RETURN_ERROR_IO;
-  }
-  return RETURN_NONE;
-}
-
-return_type get_next_word(FILE *stream, char **word_buffer, size_t *word_length,
-    size_t default_capacity, bool uppercasing, bool punctuation_like_spaces) {
-  // Initialization
-  const bool word_not_capped = default_capacity == 0;
-  size_t word_buffer_capacity = (word_not_capped
-      ? WS_CTX_DEFAULT_OPTION_VALUE__INITIAL
-      : default_capacity);
-  *word_buffer = (char *) malloc(word_buffer_capacity + 1);
-  if (*word_buffer == NULL) {
-    return RETURN_ERROR_CAPACITY;
-  }
-  memset(*word_buffer, 0, word_buffer_capacity);
-  *word_length = 0;
-  //retrieving word
-  int c;
-  while (1) {
-    c = fgetc(stream);
-    if (c == EOF || is_space(c, punctuation_like_spaces)) {
-      break;
-    }
-    // Extend word buffer capacity if needed (always leave one byte free for
-    //  the null terminator)
-    if (word_not_capped && *word_length == word_buffer_capacity) {
-      word_buffer_capacity = word_buffer_capacity * 2 + 1;
-      *word_buffer = (char *) realloc(*word_buffer, word_buffer_capacity + 1);
-      if (*word_buffer == NULL) {
-        return RETURN_ERROR_CAPACITY;
-      }
-      memset(*word_buffer + *word_length + 1, 0,
-          word_buffer_capacity - *word_length - 1);
-    }
-    // If word has infinite capacity or space remaining, append char to word
-    if (word_not_capped || *word_length <= word_buffer_capacity) {
-      (*word_buffer)[*word_length] = (char) (uppercasing ? toupper(c) : c);
-      ++*word_length;
-    }
-  }
-  if (c == EOF && stream == stdin) {
-    clearerr(stream);
-  }
-  if (ferror(stream)) {
-    free(*word_buffer);
-    return RETURN_ERROR_IO;
-  }
-  // if (c != EOF) {
-  //   if (ungetc(c, stream) == EOF) {
-  //     free(*word_buffer);
-  //     return RETURN_ERROR_IO;
-  //   }
-  // }
-  *word_buffer = realloc(*word_buffer, *word_length + 1);
-  return *word_buffer == NULL
-         ? RETURN_ERROR_CAPACITY
-         : RETURN_NONE;
-}
-
 inline void wsctx_prepare_next_file(wsctx_t *ctx) {
   // evil bithack to update pattern
-  *(short *) (ctx->files.current_pattern
-  + (ctx->files.current / BITS_IN_BYTE)) = (short) (
-    *(short *) (ctx->files.current_pattern
-    + (ctx->files.current / BITS_IN_BYTE)) << 1);
+  short *interesting_byte = (short *) (ctx->files.current_pattern
+      + (ctx->files.current / BITS_IN_BYTE));
+  *interesting_byte = (short) (*interesting_byte << 1);
   ++ctx->files.current;
 }
 
-return_type wsctx_parse_next_file(wsctx_t *ctx) {
-  const char *file_name = ctx->files.names[ctx->files.current];
-  const bool is_file = *file_name == '\0';
-  return_type res = RETURN_NONE;
-  // opening stream
-  FILE *stream = is_file ? stdin : fopen(file_name, "r");
-  if (stream == NULL) {
-    ctx->error_message = file_name;
-    return RETURN_ERROR_UNACCESSIBLE_FILE;
-  }
-  // searching for words in stream
-  size_t line_number = 1;
-  while (!feof(stream)) {
-    // skip spaces and punctuation if -p is specified
-    res = skip_spaces(stream, &line_number,
-        ctx->parameters.punctuation_like_spaces);
-    if (res != RETURN_NONE) {
-      if (is_file) {
-        fclose(stream);
-      }
-      if (res == RETURN_EXIT) {
-        break;
-      }
-      ctx->error_message = file_name;
-      return RETURN_ERROR_IO;
-    }
-    // retrieve word into word buffer
-    size_t word_length = 0;
-    char *word_buffer = NULL;
-    res = get_next_word(stream, &word_buffer, &word_length,
-        ctx->parameters.initial, ctx->parameters.uppercasing,
-        ctx->parameters.punctuation_like_spaces);
-    if (res != RETURN_NONE) {
-      if (is_file) {
-        fclose(stream);
-      }
-      if (res == RETURN_ERROR_CAPACITY) {
-        return RETURN_ERROR_CAPACITY;
-      }
-      ctx->error_message = file_name;
-      return RETURN_ERROR_IO;
-    }
-    // printing warning message if word is sliced
-    if (ctx->parameters.initial != 0
-        && word_length >= ctx->parameters.initial) {
-      word_buffer[ctx->parameters.initial] = '\0';
-      fprintf(stderr, "%s: " LANG_MESSAGE_WARNING_WORD_SPLICING__WORD_FROM " ",
-          ctx->parameters.exec_name);
-      if (*file_name == '\0') {
-        fprintf(stderr, LANG_MESSAGE_WARNING_WORD_SPLICING__STDIN);
-      } else {
-        fprintf(stderr, "'%s'", file_name);
-      }
-      fprintf(stderr,
-          " " LANG_MESSAGE_WARNING_WORD_SPLICING__AT_LINE " %zu "
-          LANG_MESSAGE_WARNING_WORD_SPLICING__CUT ": '%s...'.\n", line_number,
-          word_buffer);
-    }
-    // adding word to context
-    word_t *word = wsctx_add_word(ctx, word_buffer);
-    if (word == NULL) {
-      free(word_buffer);
-      if (is_file) {
-        fclose(stream);
-      }
-      return RETURN_ERROR_CAPACITY;
-    }
-    if (word->count != 0) {
-      free(word_buffer);
-    }
-    ++word->count;
-  }
-  // If file isn't stdin, close the file.
-  if (*file_name != '\0' && fclose(stream) == EOF) {
-    ctx->error_message = file_name;
-    return RETURN_ERROR_IO;
-  }
-  wsctx_prepare_next_file(ctx);
-  return RETURN_NONE;
-}
-
-int r_free(void *ptr) {
-  free(ptr);
-  return 0;
-}
-
-int r_free_word(word_t *word) {
-  free(word->pattern);
-  free(word);
-  return 0;
-}
+//==============================================================================
+// Helper functions
+//==============================================================================
 
 size_t strhash(const char *s) {
   size_t h = 0;
@@ -565,6 +560,22 @@ size_t strhash(const char *s) {
     h = 37 * h + *p;
   }
   return h;
+}
+
+int getc_stream(FILE *stream) {
+  return fgetc(stream);
+}
+
+int getc_stdin(__attribute__((unused)) FILE *stream) {
+  return getchar();
+}
+
+int fclose_stream(FILE *stream) {
+  return fclose(stream);
+}
+
+int fclose_stdin(__attribute__((unused)) FILE *stream) {
+  return 0;
 }
 
 bool is_space(int c, bool punctuation_like_spaces) {
@@ -588,14 +599,6 @@ int word_compar_pattern(const word_t **word1, const word_t **word2) {
   if (res != 0) {
     return res;
   }
-#ifdef WS_FINER_PATTERN_COMPAR
-  for (size_t i = pattern_size - 1; i != (size_t) (-1); --i) {
-    if ((*word1)->pattern[i] != (*word2)->pattern[i]) {
-      return ((*word1)->pattern[i] > (*word2)->pattern[i])
-             - ((*word1)->pattern[i] < (*word2)->pattern[i]);
-    }
-  }
-#endif
   return 0;
 }
 
@@ -606,4 +609,28 @@ int word_compar_count(const word_t **word1, const word_t **word2) {
 
 int word_compar_word(const word_t **word1, const word_t **word2) {
   return strcmp((*word2)->word, (*word1)->word);
+}
+
+size_t min__size_t(size_t a, size_t b) {
+  return a < b ? a : b;
+}
+
+void print_word(wsctx_t *ctx, word_t *word) {
+  for (size_t i = 0; i < ctx->files.count; ++i) {
+    printf("%c",
+        ((word->pattern[(i / BITS_IN_BYTE)] >>
+        (i % BITS_IN_BYTE)) & 1) ? 'x' : '-');
+  }
+  printf("\t%zu\t%s\n", word->count, word->word);
+}
+
+int r_free(void *ptr) {
+  free(ptr);
+  return 0;
+}
+
+int r_free_word(word_t *word) {
+  free(word->pattern);
+  free(word);
+  return 0;
 }
