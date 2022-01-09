@@ -14,6 +14,8 @@
 #include <string.h>
 #include <sys/ioctl.h>
 
+#define LOCAL_DIRECTORY_PREFIX "./"
+
 #define DEFULT_MAX_TEXT_WIDTH 80
 
 #define STR(x) #x
@@ -65,7 +67,8 @@ int main(int argc, char **argv) {
   }
   // context parameters initialization
   {
-    parameters.exec_name = argv[0] + (strncmp(argv[0], "./", 2) == 0 ? 2 : 0);
+    parameters.exec_name
+      = argv[0] + (strncmp(argv[0], LOCAL_DIRECTORY_PREFIX, 2) == 0 ? 2 : 0);
     int last_index;
     wsctx_parameters_default_initialization(&parameters);
     switch (parse_arguments(argc, argv, &parameters, files, &last_index)) {
