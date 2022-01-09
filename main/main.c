@@ -48,13 +48,7 @@ static opt_t options[] = {
   NEW_OPTION(HELP, false, opt__help),
   NEW_OPTION(MAN, false, opt__man),
   NEW_OPTION(USAGE, false, opt__usage),
-  {
-    .long_name = "version",
-    .short_name = '\0',
-    .need_argument = false,
-    .process = opt__version,
-    .description = "Print version information."
-  },
+  NEW_OPTION(VERSION, false, opt__version)
 };
 
 static return_type parse_arguments(int argc, char **argv,

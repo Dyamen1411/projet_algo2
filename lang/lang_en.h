@@ -41,6 +41,7 @@
 #define LANG_OPT_NAME_LONG__HELP "help"
 #define LANG_OPT_NAME_LONG__MAN "man"
 #define LANG_OPT_NAME_LONG__USAGE "usage"
+#define LANG_OPT_NAME_LONG__VERSION "version"
 
 //  Short option names
 #define LANG_OPT_NAME_SHORT__INITIAL 'i'
@@ -51,6 +52,7 @@
 #define LANG_OPT_NAME_SHORT__HELP '?'
 #define LANG_OPT_NAME_SHORT__MAN '\0'
 #define LANG_OPT_NAME_SHORT__USAGE '\0'
+#define LANG_OPT_NAME_SHORT__VERSION '\0'
 
 //  Option descriptions
 //  TODO@Dyamen1411 :
@@ -72,6 +74,7 @@
 #define LANG_OPT_DESCRIPTION__MAN "Print this help message following " \
   "man-style and exit."
 #define LANG_OPT_DESCRIPTION__USAGE "Print a short usage message and exit."
+#define LANG_OPT_DESCRIPTION__VERSION "Print version information."
 
 //  Usage
 #define LANG_OPT__USAGE__USAGE "Usage"
