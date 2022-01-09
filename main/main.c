@@ -155,8 +155,8 @@ dispose:
 }
 
 static void print_usage(const char *exec_name) {
-  printf(LANG_OPT__USAGE__USAGE ": \033[1m%s\033[0m [" LANG_OPT__PARAMETER_OPTION "]... "
-      LANG_OPT__PARAMETER_FILES "\n",
+  printf(LANG_OPT__USAGE__USAGE ": \033[1m%s\033[0m ["
+      LANG_OPT__PARAMETER_OPTION "]... " LANG_OPT__PARAMETER_FILES "\n",
       exec_name);
 }
 
