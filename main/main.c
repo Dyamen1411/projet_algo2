@@ -232,6 +232,24 @@ static void print_copyright() {
   printf(LANG_WS__COPYRIHT);
 }
 
+// static void opt_indentation(const char *s, int x, int indent, int width) {
+//   const char *p = s;
+//   while (*p != '\0') {
+//     const char *q = p;
+//     while (*q != '\0' && !isspace(*q)) {
+//       ++q;
+//     }
+//     if ( x+q -p <width) {
+//       if (x >indent) {
+//         PUTC(x, ' ');
+//     } else {
+//         NEW_LINE(x);
+//     }
+//     AD
+//   }
+
+// }
+
 static void print_short_description(const char *exec_name) {
   printf("\033[1m%s\033[0m - " LANG_WS__SHORT_DESCRIPTION "\n", exec_name);
 }
@@ -240,7 +258,7 @@ static void print_long_description(const char *exec_name) {
   printf("\033[1m%s\033[0m - " LANG_WS__LONG_DESCRIPTION "\n", exec_name);
 }
 
-static void print_help() {
+static void print_options() {
   char short_opt[4];
   for (size_t i = 0; i < sizeof(options) / sizeof(opt_t); ++i) {
     opt_t opt = options[i];
@@ -253,6 +271,20 @@ static void print_help() {
         short_opt,
         opt.long_name,
         opt.need_argument ? "=VALUE" : "", opt.description);
+  }
+}
+
+static void print_options_man() {
+  char short_opt[4];
+  for (size_t i = 0; i < sizeof(options) / sizeof(opt_t); ++i) {
+    opt_t opt = options[i];
+    sprintf(short_opt, "-%c", opt.short_name);
+    printf(
+        " \t\033[1m%s\033[0m\033[1m%s\033[0m --\033[1m%s\033[0m\033[1m%s\033[0m\t%s\n\n",
+        short_opt,
+        opt.need_argument ? " value," : ",",
+        opt.long_name,
+        opt.need_argument ? "=value" : " ", opt.description);
   }
 }
 
@@ -347,10 +379,11 @@ return_type opt__help(
     __attribute__((unused)) wsctx_parameters_t *p,
     __attribute__((unused)) const char *arg) {
   print_usage(p->exec_name);
+  printf("\n");
   print_short_description(p->exec_name);
   printf("\n");
   printf(LANG_WS__HOW_TO_USE_OPTIONS ".\n\n");
-  print_help();
+  print_options();
   // char short_opt[3 + 1];
   // char long_opt[11];
   // for (size_t i = 0; i < sizeof(options) / sizeof(opt_t); ++i) {
@@ -409,7 +442,8 @@ return_type opt__man(
   print_long_description("ws");
   printf("\n");
   // options
-  printf("\033[1mOPTIONS\033[0m\n\n\t");
+  printf("\033[1mOPTIONS\033[0m\n\n");
+  print_options_man();
   printf("\n");
   // limits
   printf("\033[1mLIMITS\033[0m\n\t");
