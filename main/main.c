@@ -292,15 +292,24 @@ return_type opt__man(wsctx_parameters_t *p,
   }
   const int indent = 8;
   const size_t exec_name_length = strlen(p->exec_name);
+  printf("%zu\n", exec_name_length);
+  //
   printf(MAKE_SECTION(NAME));
   printf("%*c%s", indent, ' ', p->exec_name);
-  print_description(ws.ws_col, indent, exec_name_length,
+  print_description(ws.ws_col, indent + 1, exec_name_length,
       " - " LANG_WS__SHORT_DESCRIPTION);
   putchar('\n');
+  //
   printf(MAKE_SECTION(SYNOPSIS));
   printf("%*c" MAKE_BOLD(EXEC_NAME_FORMAT), indent, ' ', p->exec_name);
-  print_description(ws.ws_col, indent, exec_name_length,
-      " - " LANG_WS__SYNOPSIS);
+  print_description(ws.ws_col, indent + 1, exec_name_length,
+      " " LANG_WS__SYNOPSIS);
+  putchar('\n');
+  //
+  printf(MAKE_SECTION(DESCRIPTION));
+  printf("\n%*c" MAKE_BOLD(EXEC_NAME_FORMAT), indent, ' ', p->exec_name);
+  print_description(ws.ws_col, indent + 1, exec_name_length,
+      " " LANG_WS__LONG_DESCRIPTION);
   putchar('\n');
   // printf("\033[1mNAME\033[0m\n\t");
   // print_short_description("ws");
@@ -354,18 +363,27 @@ void print_description(size_t column_count, size_t indent, size_t offset,
   memset(buffer, 0, column_count + 1);
   unsigned int cursor = (unsigned int) offset;
   while (1) {
-    for (; isspace(*description); ++cursor) {
+    while (isspace(*description)) {
       if (cursor >= column_count || *description == '\n') {
         cursor = (unsigned int) indent + 1;
         putchar('\n');
         for (size_t j = 1; j < indent; ++j) {
           putchar(' ');
         }
+        break;
       }
       if (*description != '\n') {
         putchar(*description);
-      } else {
-        --cursor;
+        ++cursor;
+      }
+      ++description;
+    }
+    while (isspace(*description)) {
+      if (*description == '\n') {
+        putchar('\n');
+        for (size_t j = 1; j < indent; ++j) {
+          putchar(' ');
+        }
       }
       ++description;
     }
@@ -374,8 +392,7 @@ void print_description(size_t column_count, size_t indent, size_t offset,
     }
     size_t i = 0;
     const char *base = description;
-    for (; *description != '\0' && !isspace(*description) && i < column_count;
-        ++cursor) {
+    while (*description != '\0' && !isspace(*description) && i < column_count) {
       if (cursor >= column_count) {
         cursor = (unsigned int) (indent + i);
         putchar('\n');
@@ -385,6 +402,7 @@ void print_description(size_t column_count, size_t indent, size_t offset,
       }
       ++description;
       ++i;
+      ++cursor;
     }
     if (i != 0) {
       memcpy(buffer, base, i);
