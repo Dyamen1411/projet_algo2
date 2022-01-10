@@ -178,11 +178,11 @@ dispose:
   return r;
 }
 
-static void print_usage(const char *exec_name) {
-  printf(LANG_OPT__USAGE__USAGE ": \033[1m%s\033[0m ["
-      LANG_OPT__PARAMETER_OPTION "]... " LANG_OPT__PARAMETER_FILES "\n",
-      exec_name);
-}
+// static void print_usage(const char *exec_name) {
+//   printf(LANG_OPT__USAGE__USAGE ": \033[1m%s\033[0m ["
+//       LANG_OPT__PARAMETER_OPTION "]... " LANG_OPT__PARAMETER_FILES "\n",
+//       exec_name);
+// }
 
 static void print_usage_synopsis(const char *exec_name) {
   printf("\033[1m%s\033[0m [" LANG_OPT__PARAMETER_OPTION "]... "
@@ -387,7 +387,7 @@ return_type opt__man(
 return_type opt__usage(
     __attribute__((unused)) wsctx_parameters_t *p,
     __attribute__((unused))const char *arg) {
-  print_usage(p->exec_name);
+  printf(LANG_FUN_OUTPUT__HELP__USAGE "\n", p->exec_name);
   return RETURN_EXIT;
 }
 
