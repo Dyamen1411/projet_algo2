@@ -28,9 +28,13 @@
 //==============================================================================
 
 //  Generic parameter names
-#define LANG_OPT__PARAMETER_OPTION "OPTION"
-#define LANG_OPT__PARAMETER_FILES "FILES"
-#define LANG_OPT__PARAMETER_VALUE "VALUE"
+#define LANG_OPT__PARAMETER_OPTION_CAPS "OPTION"
+#define LANG_OPT__PARAMETER_FILES_CAPS "FILES"
+#define LANG_OPT__PARAMETER_VALUE_CAPS "VALUE"
+
+#define LANG_OPT__PARAMETER_OPTION_LOWER "option"
+#define LANG_OPT__PARAMETER_FILES_LOWER "files"
+#define LANG_OPT__PARAMETER_VALUE_LOWER "value"
 
 //  Long option names
 #define LANG_OPT_NAME_LONG__INITIAL "initial"
@@ -78,16 +82,22 @@
 
 //==============================================================================
 #define LANG_MANN_SECTION__NAME "NAME"
+#define LANG_MANN_SECTION__SYNOPSIS "SYNOPSIS"
 //==============================================================================
+
 #define LANG_OPT_CATEGORY_NAME__INFORMATION "Program Information"
 #define LANG_OPT_CATEGORY_NAME__INPUT_CONTROL "Input Control"
 #define LANG_OPT_CATEGORY_NAME__OUTPUT_CONTROL "Output Control"
 
 #define LANG_FUN_OUTPUT__HELP__USAGE "Usage: " EXEC_NAME_FORMAT " [" \
-  LANG_OPT__PARAMETER_OPTION "]... " LANG_OPT__PARAMETER_FILES
+  LANG_OPT__PARAMETER_OPTION_CAPS "]... " LANG_OPT__PARAMETER_FILES_CAPS
 
 #define LANG_WS__SHORT_DESCRIPTION \
   "Print a list of words shared by text files."
+
+#define LANG_WS__SYNOPSIS "[" \
+  MAKE_UNDERLINED(LANG_OPT__PARAMETER_OPTION_LOWER) "]... " \
+  MAKE_UNDERLINED(LANG_OPT__PARAMETER_FILES_LOWER)
 
 #define LANG_WS__HOW_TO_USE_OPTIONS \
   "Mandatory arguments to long options are mandatory for short options too."

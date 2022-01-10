@@ -20,6 +20,9 @@
 #define TEXT_FW_UNDERLINED "\033[4m"
 #define TEXT_FW_NONE "\033[0m"
 
+#define MAKE_BOLD(text) TEXT_FW_BOLD text TEXT_FW_NONE
+#define MAKE_UNDERLINED(text) TEXT_FW_UNDERLINED text TEXT_FW_NONE
+
 #if (LANG == EN)
 #include "lang_en.h"
 #elif (LANG == FR)

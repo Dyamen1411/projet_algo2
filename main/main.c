@@ -282,17 +282,25 @@ return_type opt__help(
   return RETURN_EXIT;
 }
 
+#define MAKE_SECTION(_name) MAKE_BOLD(LANG_MANN_SECTION__ ## _name) "\n"
+
 return_type opt__man(wsctx_parameters_t *p,
     __attribute__((unused)) const char *arg) {
   struct winsize ws;
   if (ioctl(0, TIOCGWINSZ, &ws) == -1 || ws.ws_col < DEFAULT_INDENT + 2) {
     ws.ws_col = DEFULT_MAX_TEXT_WIDTH;
   }
-  printf(TEXT_FW_BOLD LANG_MANN_SECTION__NAME TEXT_FW_NONE "\n");
+  const int indent = 8;
   const size_t exec_name_length = strlen(p->exec_name);
-  printf("%*c%s", 8, ' ', p->exec_name);
-  print_description(ws.ws_col, 8, exec_name_length,
+  printf(MAKE_SECTION(NAME));
+  printf("%*c%s", indent, ' ', p->exec_name);
+  print_description(ws.ws_col, indent, exec_name_length,
       " - " LANG_WS__SHORT_DESCRIPTION);
+  putchar('\n');
+  printf(MAKE_SECTION(SYNOPSIS));
+  printf("%*c" MAKE_BOLD(EXEC_NAME_FORMAT), indent, ' ', p->exec_name);
+  print_description(ws.ws_col, indent, exec_name_length,
+      " - " LANG_WS__SYNOPSIS);
   putchar('\n');
   // printf("\033[1mNAME\033[0m\n\t");
   // print_short_description("ws");
@@ -391,12 +399,12 @@ void print_opt(size_t column_count, opt_t *opt) {
   const size_t indent = DEFAULT_INDENT;
   char short_opt[4];
   const unsigned int prefix_length = (unsigned int) (strlen(opt->long_name)
-      + (opt->need_argument ? sizeof(LANG_OPT__PARAMETER_VALUE) : 0));
+      + (opt->need_argument ? sizeof(LANG_OPT__PARAMETER_VALUE_CAPS) : 0));
   const bool overflow = prefix_length >= (indent - 8 - 1);
   const size_t offset = indent + 1 + (overflow ? prefix_length - 8 : 0);
   const size_t spacer_length = overflow ? 4 : indent - 8 - prefix_length;
   const char *long_str = opt->need_argument
-      ? "=" LANG_OPT__PARAMETER_VALUE
+      ? "=" LANG_OPT__PARAMETER_VALUE_CAPS
       : "";
   const char *short_format = opt->short_name == '\0' ? "   " : "-%c,";
   sprintf(short_opt, short_format, opt->short_name);
