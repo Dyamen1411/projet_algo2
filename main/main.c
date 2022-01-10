@@ -336,14 +336,19 @@ return_type opt__man(wsctx_parameters_t *p,
   //
   printf(MAKE_SECTION(LIMITS));
   printf("%*c", indent, ' ');
-  _print_description(ws.ws_col, indent, offset, LANG_WS__LIMITS,
+  _print_description(ws.ws_col, indent, indent, LANG_WS__LIMITS,
       LANG_OPT__PARAMETER_FILES);
   putchar('\n');
   //
   printf(MAKE_SECTION(AUTHORS));
   printf("%*c", indent, ' ');
-  print_description(ws.ws_col, indent, offset, LANG_WS__AUTHORS);
+  print_description(ws.ws_col, indent, indent, LANG_WS__AUTHORS);
   putchar('\n');
+  //
+  printf(MAKE_SECTION(COPYRIGHT));
+  printf("%*c%s", indent, ' ', p->exec_name);
+  print_description(ws.ws_col, indent, offset,
+      " - " WS_VERSION "\n" LANG_WS__COPYRIHT);
   return RETURN_EXIT;
 }
 
@@ -378,24 +383,17 @@ void _print_description(size_t column_count, size_t indent, size_t offset,
     while (isspace(*description)) {
       if (cursor >= column_count || *description == '\n') {
         cursor = (unsigned int) indent + 1;
-        putchar('\n');
-        for (size_t j = 0; j < indent; ++j) {
-          putchar(' ');
-        }
+        printf("\n%*c", (unsigned int) indent, ' ');
+        ++description;
         break;
       }
-      if (*description != '\n') {
-        putchar(*description);
-        ++cursor;
-      }
+      putchar(*description);
+      ++cursor;
       ++description;
     }
     while (isspace(*description)) {
       if (*description == '\n') {
-        putchar('\n');
-        for (size_t j = 0; j < indent; ++j) {
-          putchar(' ');
-        }
+        printf("\n%*c", (unsigned int) indent, ' ');
       }
       ++description;
     }
@@ -408,10 +406,7 @@ void _print_description(size_t column_count, size_t indent, size_t offset,
     while (*description != '\0' && !isspace(*description) && i < column_count) {
       if (cursor >= column_count) {
         cursor = (unsigned int) (indent + i);
-        putchar('\n');
-        for (size_t j = 0; j < indent; ++j) {
-          putchar(' ');
-        }
+        printf("\n%*c", (unsigned int) indent, ' ');
       }
       ++description;
       ++i;

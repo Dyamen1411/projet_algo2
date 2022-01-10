@@ -81,6 +81,7 @@
 #define LANG_MANN_SECTION__OPTIONS "OPTIONS"
 #define LANG_MANN_SECTION__LIMITS "LIMITS"
 #define LANG_MANN_SECTION__AUTHORS "AUTHORS"
+#define LANG_MANN_SECTION__COPYRIGHT "COPYRIGHT"
 
 //==============================================================================
 
@@ -105,7 +106,7 @@
   "several text " LANG_OPT__PARAMETER_FILES ". Each of the words listed is " \
   "accompanied by a pattern indicating in which " LANG_OPT__PARAMETER_FILES \
   " it appears and the total number of its occurrences in the " \
-  LANG_OPT__PARAMETER_FILES ".\nA word is, by default, a maximum length " \
+  LANG_OPT__PARAMETER_FILES ".\n\nA word is, by default, a maximum length " \
   "sequence of characters that do not belong to the space class. A word is " \
   "shared when it appears in at least two " LANG_OPT__PARAMETER_FILES ". " \
   "Only shared words are listed. The printed list is sorted in descending " \
@@ -117,14 +118,14 @@
   "word. The content of a line consists of three fields: the pattern with " \
   "'x's or '-' depending on wether the word appears in the " \
   LANG_OPT__PARAMETER_FILES " or not; the total number of occurrences; the " \
-  "word.The tab character is used as field separator.\nRead the standard " \
+  "word.The tab character is used as field separator.\n\nRead the standard " \
   "input for any of the " LANG_OPT__PARAMETER_FILES " which is \"-\"."
 
 #define LANG_WS__LIMITS "The number of " LANG_OPT__PARAMETER_FILES " that " \
   "can be passed must be at least 2. The counters of the total number of " \
   "occurences of the words have a maximum value of " XSTR(_LONG_MAX) "."
 
+#define LANG_WS__AUTHORS "Written by " WS_AUTHOR_NAMES "."
+
 #define LANG_WS__COPYRIHT "This is freeware: you can redistribute it. There " \
   "is NO WARRANTY."
-
-#define LANG_WS__AUTHORS "Written by " WS_AUTHOR_NAMES "."
