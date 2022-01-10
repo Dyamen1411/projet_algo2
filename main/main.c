@@ -198,22 +198,6 @@ static void print_long_description(const char *exec_name) {
   printf("\033[1m%s\033[0m - " LANG_WS__LONG_DESCRIPTION "\n", exec_name);
 }
 
-static void print_help() {
-  char short_opt[4];
-  for (size_t i = 0; i < sizeof(options) / sizeof(opt_t); ++i) {
-    opt_t opt = options[i];
-    if (opt.short_name == '\0') {
-      sprintf(short_opt, "   ");
-    } else {
-      sprintf(short_opt, "-%c,", opt.short_name);
-    }
-    printf("  %s --%s%s\t%s\n\n",
-        short_opt,
-        opt.long_name,
-        opt.need_argument ? "=VALUE" : "", opt.description);
-  }
-}
-
 static void print_limits() {
   printf(
       LANG_WS__MAN_LIMITS " %zu.\n", sizeof(size_t));
@@ -381,7 +365,6 @@ return_type opt__help(
   PRINT_OPT_CATEGORY(INPUT_CONTROL);
   PRINT_OPT_CATEGORY(OUTPUT_CONTROL);
   return RETURN_EXIT;
-  print_help();
   print_limits();
   return RETURN_EXIT;
 }
