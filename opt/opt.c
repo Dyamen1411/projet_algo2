@@ -3,6 +3,17 @@
 #include <string.h>
 #include <stdio.h>
 
+#define STDIN_NAME "-"
+
+#define IS_SHORT_OPT(arg) \
+  (strncmp((arg), OPT__SHORT, sizeof(OPT__SHORT) - 1) == 0)
+
+#define IS_LONG_OPT(arg) \
+  (strncmp((arg), OPT__LONG, sizeof(OPT__LONG) - 1) == 0)
+
+#define IS_STDIN(arg) \
+  (strcmp((arg), STDIN_NAME) == 0)
+
 static return_type parse_long_opt(const int argc, char **argv,
     int *arg_pos, wsctx_parameters_t *parameters, const opt_t *opts,
     const size_t opt_count) {
@@ -69,7 +80,7 @@ return_type parse_opt(const int argc, char **argv, int *arg_pos,
     return parse_long_opt(argc, argv, arg_pos, parameters, opts, opt_count);
   }
   if (IS_SHORT_OPT(argv[*arg_pos])) {
-    return *(argv[*arg_pos] + 1) == '\0'
+    return IS_STDIN(argv[*arg_pos] + 1)
            ? linked_list_add_tail(files, argv[*arg_pos] + 1) == NULL
            ? RETURN_ERROR_CAPACITY
            : RETURN_NONE

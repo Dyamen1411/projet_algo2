@@ -32,28 +32,6 @@
 #define LANG_OPT__PARAMETER_FILES "FILES"
 #define LANG_OPT__PARAMETER_VALUE "VALUE"
 
-//  Long option names
-#define LANG_OPT_NAME_LONG__INITIAL "initial"
-#define LANG_OPT_NAME_LONG__PUNCTUATION_LIKE_SPACE "punctuation-like-space"
-#define LANG_OPT_NAME_LONG__SAME_NUMBER "same-numbers"
-#define LANG_OPT_NAME_LONG__TOP "top"
-#define LANG_OPT_NAME_LONG__UPPERCASING "uppercasing"
-#define LANG_OPT_NAME_LONG__HELP "help"
-#define LANG_OPT_NAME_LONG__MAN "man"
-#define LANG_OPT_NAME_LONG__USAGE "usage"
-#define LANG_OPT_NAME_LONG__VERSION "version"
-
-//  Short option names
-#define LANG_OPT_NAME_SHORT__INITIAL 'i'
-#define LANG_OPT_NAME_SHORT__PUNCTUATION_LIKE_SPACE 'p'
-#define LANG_OPT_NAME_SHORT__SAME_NUMBER 's'
-#define LANG_OPT_NAME_SHORT__TOP 't'
-#define LANG_OPT_NAME_SHORT__UPPERCASING 'u'
-#define LANG_OPT_NAME_SHORT__HELP '?'
-#define LANG_OPT_NAME_SHORT__MAN LANG_OPT_SHORT_NO_NAME
-#define LANG_OPT_NAME_SHORT__USAGE LANG_OPT_SHORT_NO_NAME
-#define LANG_OPT_NAME_SHORT__VERSION LANG_OPT_SHORT_NO_NAME
-
 #define LANG_OPT_DESCRIPTION__INITIAL "Set the maximal number of significant " \
   "initial letters for words to " LANG_OPT__PARAMETER_VALUE ". 0 means " \
   "without limitation. Default is " XSTR(WS_CTX_DEFAULT_OPTION_VALUE__INITIAL) \

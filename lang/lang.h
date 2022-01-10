@@ -20,12 +20,11 @@
 #define TEXT_FW_UNDERLINED "\033[4m"
 #define TEXT_FW_NONE "\033[0m"
 
-#define LANG_OPT_LONG_NO_NAME ""
-#define LANG_OPT_SHORT_NO_NAME '\0'
+#define WS_AUTHOR_NAMES "A. MASSIAS & K.KLAK"
+#define WS_VERSION "2022/01/10"
 
 #define MAKE_BOLD(text) TEXT_FW_BOLD text TEXT_FW_NONE
 #define MAKE_UNDERLINED(text) TEXT_FW_UNDERLINED text TEXT_FW_NONE
-#define _MAKE_UNDERLINED(text) text
 
 #if (LANG == EN)
 #include "lang_en.h"

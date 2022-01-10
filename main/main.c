@@ -14,6 +14,55 @@
 #include <string.h>
 #include <sys/ioctl.h>
 
+#define LOCAL_DIRECTORY_PREFIX "./"
+#define DEFULT_MAX_TEXT_WIDTH 80
+
+#define OPT_HELP_CHAR_COUNT_TO_LONG_NAME 8
+#define OPT_HELP_DEFAULT_PADDING_LENGTH 4
+#define OPT_HELP_DEFAULT_INDENT 20
+#define OPT_MAN_DEFAULT_INDENT 8
+
+//  Long option names
+#define OPT_NAME_LONG__INITIAL "initial"
+#define OPT_NAME_LONG__PUNCTUATION_LIKE_SPACE "punctuation-like-space"
+#define OPT_NAME_LONG__SAME_NUMBER "same-numbers"
+#define OPT_NAME_LONG__TOP "top"
+#define OPT_NAME_LONG__UPPERCASING "uppercasing"
+#define OPT_NAME_LONG__HELP "help"
+#define OPT_NAME_LONG__MAN "man"
+#define OPT_NAME_LONG__USAGE "usage"
+#define OPT_NAME_LONG__VERSION "version"
+
+//  Short option names
+#define OPT_NAME_SHORT__INITIAL 'i'
+#define OPT_NAME_SHORT__PUNCTUATION_LIKE_SPACE 'p'
+#define OPT_NAME_SHORT__SAME_NUMBER 's'
+#define OPT_NAME_SHORT__TOP 't'
+#define OPT_NAME_SHORT__UPPERCASING 'u'
+#define OPT_NAME_SHORT__HELP '?'
+#define OPT_NAME_SHORT__MAN OPT_SHORT_NO_NAME
+#define OPT_NAME_SHORT__USAGE OPT_SHORT_NO_NAME
+#define OPT_NAME_SHORT__VERSION OPT_SHORT_NO_NAME
+
+#define PRINT_CATEGORY_HELP(_cc, _category) \
+  printf(LANG_OPT_CATEGORY_NAME__ ## _category "\n"); \
+  for (size_t i = 0; i < sizeof(options) / sizeof(opt_t); ++i) { \
+    if (options[i].category != OPT_CATEGORY_ ## _category) { \
+      continue; \
+    } \
+    print_opt__help(&options[i], (_cc)); \
+    putchar('\n'); \
+  } \
+  putchar('\n')
+
+#define PRINT_CATEGORY_MAN(_category, _column_count) \
+  printf(MAKE_CATEGORY(_category)); \
+  _print_section_man(OPT_CATEGORY_ ## _category, (_column_count))
+
+#define MAKE_SECTION(_title) MAKE_BOLD(LANG_MANN_SECTION__ ## _title) "\n"
+#define MAKE_CATEGORY(_title) "    " \
+  MAKE_BOLD(LANG_OPT_CATEGORY_NAME__ ## _title) "\n"
+
 #define STR_TO_LOWER(_dest, _src) \
   { \
     strcpy((_dest), (_src)); \
@@ -22,40 +71,15 @@
     } \
   }
 
-#define NEW_OPTION(_name, _need_argument, _process_function, _category) \
+#define OPTION(_name, _need_argument, _process_function, _category) \
   { \
-    .long_name = LANG_OPT_NAME_LONG__ ## _name, \
-    .short_name = LANG_OPT_NAME_SHORT__ ## _name, \
+    .long_name = OPT_NAME_LONG__ ## _name, \
+    .short_name = OPT_NAME_SHORT__ ## _name, \
     .need_argument = (_need_argument), \
     .process = (_process_function), \
     .description = LANG_OPT_DESCRIPTION__ ## _name, \
     .category = OPT_CATEGORY_ ## _category \
   }
-
-#define PRINT_OPT_CATEGORY(_cc, _category) \
-  printf(LANG_OPT_CATEGORY_NAME__ ## _category "\n"); \
-  for (size_t i = 0; i < sizeof(options) / sizeof(opt_t); ++i) { \
-    if (options[i].category != OPT_CATEGORY_ ## _category) { \
-      continue; \
-    } \
-    print_opt((_cc), &options[i]); \
-    printf("\n"); \
-  } \
-  printf("\n");
-
-#define MAKE_SECTION(_title) MAKE_BOLD(LANG_MANN_SECTION__ ## _title) "\n"
-#define MAKE_CATEGORY(_title) "    " \
-  MAKE_BOLD(LANG_OPT_CATEGORY_NAME__ ## _title) "\n"
-
-#define PRINT_CATEGORY_MAN(_category, _column_count) \
-  printf(MAKE_CATEGORY(_category)); \
-  _print_section_man(OPT_CATEGORY_ ## _category, (_column_count))
-
-#define WS_AUTHOR_NAMES "A. MASSIAS & K.KLAK"
-#define WS_VERSION "2022/01/10"
-#define LOCAL_DIRECTORY_PREFIX "./"
-#define DEFULT_MAX_TEXT_WIDTH 80
-#define DEFAULT_INDENT 20
 
 typedef enum opt_category {
   OPT_CATEGORY_INFORMATION,
@@ -75,7 +99,8 @@ typedef enum opt_index {
   OPT_INDEX_VERSION
 } opt_index;
 
-static void print_opt(size_t column_count, opt_t *opt);
+static void print_opt__help(opt_t *opt, size_t column_count);
+static void print_opt__man(opt_t *opt, size_t column_count);
 static void _print_description(size_t column_count, size_t indent,
     size_t offset, const char *description, const char *match);
 static void print_description(size_t column_count, size_t indent, size_t offset,
@@ -94,16 +119,20 @@ static return_type opt__usage(wsctx_parameters_t *p, const char *arg);
 static return_type opt__version(wsctx_parameters_t *p, const char *arg);
 
 static opt_t options[] = {
-  NEW_OPTION(INITIAL, true, opt__initial, INPUT_CONTROL),
-  NEW_OPTION(PUNCTUATION_LIKE_SPACE, false, opt__punctuation_like_space,
+  OPTION(INITIAL, true, opt__initial, INPUT_CONTROL),
+  OPTION(PUNCTUATION_LIKE_SPACE, false, opt__punctuation_like_space,
       INPUT_CONTROL),
-  NEW_OPTION(SAME_NUMBER, false, opt__same_numbers, OUTPUT_CONTROL),
-  NEW_OPTION(TOP, true, opt__top, OUTPUT_CONTROL),
-  NEW_OPTION(UPPERCASING, false, opt__uppercasing, INPUT_CONTROL),
-  NEW_OPTION(HELP, false, opt__help, INFORMATION),
-  NEW_OPTION(MAN, false, opt__man, INFORMATION),
-  NEW_OPTION(USAGE, false, opt__usage, INFORMATION),
-  NEW_OPTION(VERSION, false, opt__version, INFORMATION)
+  OPTION(SAME_NUMBER, false, opt__same_numbers, OUTPUT_CONTROL),
+  OPTION(TOP, true, opt__top, OUTPUT_CONTROL),
+  OPTION(UPPERCASING, false, opt__uppercasing, INPUT_CONTROL),
+  OPTION(HELP, false, opt__help, INFORMATION),
+  { .long_name = OPT_NAME_LONG__MAN, .short_name = OPT_NAME_SHORT__MAN,
+    .need_argument = (0), .process = (opt__man),
+    .description = LANG_OPT_DESCRIPTION__MAN,
+    .category = OPT_CATEGORY_INFORMATION },
+  OPTION(MAN, false, opt__man, INFORMATION),
+  OPTION(USAGE, false, opt__usage, INFORMATION),
+  OPTION(VERSION, false, opt__version, INFORMATION)
 };
 
 static return_type parse_arguments(int argc, char **argv,
@@ -132,7 +161,8 @@ int main(int argc, char **argv) {
             argv[0], argv[last_index]);
         goto error;
       case RETURN_ERROR_OPT_MISSING_ARG:
-        fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__MISSING_ARGUMENT " '%s'.\n",
+        fprintf(stderr,
+            "%s: " LANG_MESSAGE_ERROR__MISSING_ARGUMENT " '%s'.\n",
             argv[0], argv[last_index]);
         goto error;
       case RETURN_ERROR_CAPACITY:
@@ -207,10 +237,6 @@ dispose:
   return r;
 }
 
-static bool is_digit(char c) {
-  return '0' <= c && c <= '9';
-}
-
 return_type parse_arguments(int argc, char **argv,
     wsctx_parameters_t *parameters, linked_list_t *files, int *last_index) {
   for (*last_index = 1; *last_index < argc; ++*last_index) {
@@ -231,7 +257,7 @@ return_type opt__initial(wsctx_parameters_t *p, const char *arg) {
   if (*arg == '-') {
     return RETURN_ERROR_OPT_ARGUMENT;
   }
-  while (is_digit(*arg) && *arg != '\0') {
+  while (isdigit(*arg) && *arg != '\0') {
     n *= 10;
     n += (size_t) (*arg - '0');
     ++arg;
@@ -263,7 +289,7 @@ return_type opt__top(wsctx_parameters_t *p, const char *arg) {
   if (*arg == '-') {
     return RETURN_ERROR_OPT_ARGUMENT;
   }
-  while (is_digit(*arg) && *arg != '\0') {
+  while (isdigit(*arg) && *arg != '\0') {
     n *= 10;
     n += (size_t) (*arg - '0');
     ++arg;
@@ -285,27 +311,27 @@ return_type opt__help(
     __attribute__((unused)) wsctx_parameters_t *p,
     __attribute__((unused)) const char *arg) {
   printf(LANG_USAGE_MESSAGE "\n", p->exec_name);
-  printf("\n");
+  putchar('\n');
   printf(LANG_WS__SHORT_DESCRIPTION "\n");
-  printf("\n");
+  putchar('\n');
   printf(LANG_WS__HOW_TO_USE_OPTIONS "\n");
-  printf("\n");
+  putchar('\n');
   struct winsize ws;
-  if (ioctl(0, TIOCGWINSZ, &ws) == -1 || ws.ws_col < 20 + 2) {
+  if (ioctl(0, TIOCGWINSZ, &ws) == -1) {
     ws.ws_col = DEFULT_MAX_TEXT_WIDTH;
   }
-  PRINT_OPT_CATEGORY(ws.ws_col, INFORMATION);
-  PRINT_OPT_CATEGORY(ws.ws_col, INPUT_CONTROL);
-  PRINT_OPT_CATEGORY(ws.ws_col, OUTPUT_CONTROL);
+  PRINT_CATEGORY_HELP(ws.ws_col, INFORMATION);
+  PRINT_CATEGORY_HELP(ws.ws_col, INPUT_CONTROL);
+  PRINT_CATEGORY_HELP(ws.ws_col, OUTPUT_CONTROL);
   print_description(ws.ws_col, 0, 0, LANG_WS__LIMITS);
-  printf("\n");
+  putchar('\n');
   return RETURN_EXIT;
 }
 
 return_type opt__man(wsctx_parameters_t *p,
     __attribute__((unused)) const char *arg) {
   struct winsize ws;
-  if (ioctl(0, TIOCGWINSZ, &ws) == -1 || ws.ws_col < DEFAULT_INDENT + 2) {
+  if (ioctl(0, TIOCGWINSZ, &ws) == -1) {
     ws.ws_col = DEFULT_MAX_TEXT_WIDTH;
   }
   const int indent = 8;
@@ -431,22 +457,55 @@ void print_description(size_t column_count, size_t indent, size_t offset,
   _print_description(column_count, indent, offset, description, NULL);
 }
 
-void print_opt(size_t column_count, opt_t *opt) {
-  const size_t indent = DEFAULT_INDENT;
+void print_opt__help(opt_t *opt, size_t column_count) {
   char short_opt[4];
   const unsigned int prefix_length = (unsigned int) (strlen(opt->long_name)
       + (opt->need_argument ? sizeof(LANG_OPT__PARAMETER_VALUE) : 0));
-  const bool overflow = prefix_length >= (indent - 8 - 1);
-  const size_t offset = indent + 1 + (overflow ? prefix_length - 8 : 0);
-  const size_t spacer_length = overflow ? 4 : indent - 8 - prefix_length;
+  const bool overflow = prefix_length
+      >= (OPT_HELP_DEFAULT_INDENT - OPT_HELP_CHAR_COUNT_TO_LONG_NAME - 1);
+  const size_t offset = OPT_HELP_DEFAULT_INDENT + 1
+      + (overflow ? prefix_length - OPT_HELP_CHAR_COUNT_TO_LONG_NAME : 0);
+  const size_t padding_length = overflow
+      ? OPT_HELP_DEFAULT_PADDING_LENGTH
+      : OPT_HELP_DEFAULT_INDENT - OPT_HELP_CHAR_COUNT_TO_LONG_NAME
+      - prefix_length;
   const char *long_str = opt->need_argument
       ? "=" LANG_OPT__PARAMETER_VALUE
       : "";
   const char *short_format = opt->short_name == '\0' ? "   " : "-%c,";
   sprintf(short_opt, short_format, opt->short_name);
   printf("  %s --%s%s", short_opt, opt->long_name, long_str);
-  printf("%*c", (unsigned int) spacer_length, ' ');
-  print_description(column_count, indent, offset, opt->description);
+  printf("%*c", (unsigned int) padding_length, ' ');
+  print_description(column_count, OPT_HELP_DEFAULT_INDENT, offset,
+      opt->description);
+}
+
+void print_opt__man(opt_t *opt, size_t column_count) {
+  char lower_case_parameter_value[sizeof(LANG_OPT__PARAMETER_VALUE) + 1];
+  STR_TO_LOWER(lower_case_parameter_value, LANG_OPT__PARAMETER_VALUE);
+  const bool has_short_name = opt->short_name != '\0';
+  const bool has_long_name = *opt->long_name != '\0';
+  printf("%*c", OPT_MAN_DEFAULT_INDENT, ' ');
+  if (has_short_name) {
+    printf(MAKE_BOLD("%c"), opt->short_name);
+    if (opt->need_argument) {
+      printf(" " MAKE_UNDERLINED("%s"), lower_case_parameter_value);
+    }
+  }
+  if (has_short_name && has_long_name) {
+    printf(", ");
+  }
+  if (has_long_name) {
+    printf(MAKE_BOLD("--%s"), opt->long_name);
+    if (opt->need_argument) {
+      printf("=" MAKE_UNDERLINED("%s"), lower_case_parameter_value);
+    }
+  }
+  putchar('\n');
+  printf("%*c", 2 * OPT_MAN_DEFAULT_INDENT, ' ');
+  _print_description(column_count, 2 * OPT_MAN_DEFAULT_INDENT,
+      2 * OPT_MAN_DEFAULT_INDENT, opt->description, LANG_OPT__PARAMETER_VALUE);
+  putchar('\n');
 }
 
 void _print_section_man(opt_category category, size_t column_count) {
@@ -454,30 +513,6 @@ void _print_section_man(opt_category category, size_t column_count) {
     if (options[i].category != category) {
       continue;
     }
-    char lower_case_parameter_value[sizeof(LANG_OPT__PARAMETER_VALUE) + 1];
-    STR_TO_LOWER(lower_case_parameter_value, LANG_OPT__PARAMETER_VALUE);
-    const bool has_short_name = options[i].short_name != '\0';
-    const bool has_long_name = *options[i].long_name != '\0';
-    printf("%*c", 8, ' ');
-    if (has_short_name) {
-      printf(MAKE_BOLD("%c"), options[i].short_name);
-      if (options[i].need_argument) {
-        printf(" " MAKE_UNDERLINED("%s"), lower_case_parameter_value);
-      }
-    }
-    if (has_short_name && has_long_name) {
-      printf(", ");
-    }
-    if (has_long_name) {
-      printf(MAKE_BOLD("--%s"), options[i].long_name);
-      if (options[i].need_argument) {
-        printf("=" MAKE_UNDERLINED("%s"), lower_case_parameter_value);
-      }
-    }
-    putchar('\n');
-    printf("%*c", 2 * 8, ' ');
-    _print_description(column_count, 2 * 8, 2 * 8, options[i].description,
-        LANG_OPT__PARAMETER_VALUE);
-    putchar('\n');
+    print_opt__man(&options[i], column_count);
   }
 }
