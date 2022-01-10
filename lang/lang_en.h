@@ -32,41 +32,16 @@
 #define LANG_OPT__PARAMETER_FILES "FILES"
 #define LANG_OPT__PARAMETER_VALUE "VALUE"
 
-//  Long option names
-#define LANG_OPT_NAME_LONG__INITIAL "initial"
-#define LANG_OPT_NAME_LONG__PUNCTUATION_LIKE_SPACE "punctuation-like-space"
-#define LANG_OPT_NAME_LONG__SAME_NUMBER "same-numbers"
-#define LANG_OPT_NAME_LONG__TOP "top"
-#define LANG_OPT_NAME_LONG__UPPERCASING "uppercasing"
-#define LANG_OPT_NAME_LONG__HELP "help"
-#define LANG_OPT_NAME_LONG__MAN "man"
-#define LANG_OPT_NAME_LONG__USAGE "usage"
-#define LANG_OPT_NAME_LONG__VERSION "version"
-
-//  Short option names
-#define LANG_OPT_NAME_SHORT__INITIAL 'i'
-#define LANG_OPT_NAME_SHORT__PUNCTUATION_LIKE_SPACE 'p'
-#define LANG_OPT_NAME_SHORT__SAME_NUMBER 's'
-#define LANG_OPT_NAME_SHORT__TOP 't'
-#define LANG_OPT_NAME_SHORT__UPPERCASING 'u'
-#define LANG_OPT_NAME_SHORT__HELP '?'
-#define LANG_OPT_NAME_SHORT__MAN '\0'
-#define LANG_OPT_NAME_SHORT__USAGE '\0'
-#define LANG_OPT_NAME_SHORT__VERSION '\0'
-
-//  Option descriptions
-//  TODO@Dyamen1411 :
-//    Change external vales by format instead of direct.
-//    To do so, might add new field to opt_t to pass such values
 #define LANG_OPT_DESCRIPTION__INITIAL "Set the maximal number of significant " \
-  "initial letters for words to VALUE. 0 means without limitation. Default " \
-  "is " XSTR(WS_CTX_DEFAULT_OPTION_VALUE__INITIAL) "."
+  "initial letters for words to " LANG_OPT__PARAMETER_VALUE ". 0 means " \
+  "without limitation. Default is " XSTR(WS_CTX_DEFAULT_OPTION_VALUE__INITIAL) \
+  "."
 #define LANG_OPT_DESCRIPTION__PUNCTUATION_LIKE_SPACE "Make the punctuation " \
   "characters play the same role as space characters in the meaning of words."
 #define LANG_OPT_DESCRIPTION__SAME_NUMBER "Print more words than the limit " \
   "in case of same numbers."
 #define LANG_OPT_DESCRIPTION__TOP "Set the maximal number of words to print " \
-  "to VALUE. 0 means all the words. Default is " \
+  "to " LANG_OPT__PARAMETER_VALUE ". 0 means all the words. Default is " \
   XSTR(WS_CTX_DEFAULT_OPTION_VALUE__TOP) "."
 #define LANG_OPT_DESCRIPTION__UPPERCASING "Convert each lowercase letter of " \
   "words to the corresponding uppercase letter."
@@ -76,50 +51,59 @@
 #define LANG_OPT_DESCRIPTION__USAGE "Print a short usage message and exit."
 #define LANG_OPT_DESCRIPTION__VERSION "Print version information."
 
-//  Usage
-#define LANG_OPT__USAGE__USAGE "Usage"
+//==============================================================================
+
+#define LANG_MANN_SECTION__NAME "NAME"
+#define LANG_MANN_SECTION__SYNOPSIS "SYNOPSIS"
+#define LANG_MANN_SECTION__DESCRIPTION "DESCRIPTION"
+#define LANG_MANN_SECTION__OPTIONS "OPTIONS"
+#define LANG_MANN_SECTION__LIMITS "LIMITS"
+#define LANG_MANN_SECTION__AUTHORS "AUTHORS"
+#define LANG_MANN_SECTION__COPYRIGHT "COPYRIGHT"
 
 //==============================================================================
+
 #define LANG_OPT_CATEGORY_NAME__INFORMATION "Program Information"
 #define LANG_OPT_CATEGORY_NAME__INPUT_CONTROL "Input Control"
 #define LANG_OPT_CATEGORY_NAME__OUTPUT_CONTROL "Output Control"
 
-#define LANG_FUN_OUTPUT__HELP__USAGE "Usage: " EXEC_NAME_FORMAT " [" \
+//==============================================================================
+
+#define LANG_USAGE_MESSAGE "Usage: " EXEC_NAME_FORMAT " [" \
   LANG_OPT__PARAMETER_OPTION "]... " LANG_OPT__PARAMETER_FILES
 
-#define LANG_WS__SHORT_DESCRIPTION \
-  "Print a list of words shared by text files."
+#define LANG_WS__SHORT_DESCRIPTION "Print a list of words shared by text files."
 
-#define LANG_WS__HOW_TO_USE_OPTIONS \
-  "Mandatory arguments to long options are mandatory for short options too."
+#define LANG_WS__SYNOPSIS "[" MAKE_UNDERLINED(LANG_OPT__PARAMETER_OPTION) \
+  "]... " MAKE_UNDERLINED(LANG_OPT__PARAMETER_FILES)
 
-#define LANG_WS__LONG_DESCRIPTION \
-  "prints a list of words that appear in several text files. Each of the " \
-  "words listed is accompanied by a pattern indicating in which files it " \
-  "appears and  the  total  number  of  its occurrences in the files.\n\n\t" \
-  "A word is, by default, a maximum length sequence of characters that" \
-  "do not belong to the space class. A word is shared when it appears" \
-  "in at least two files. Only shared words are listed." \
-  "The printed list is sorted in descending order of the number of files" \
-  "in which the words appear, primary key, in descending order of the total" \
-  "number of occurrences, secondary key, and in ascending lexicographical" \
-  "order of words, tertiary key. The word comparison is understood in" \
-  "the sense of the standard function strcmp. One line of text is" \
-  "produced per shared word. The content of a line consists" \
-  "of  three  fields: the pattern with 'x's or '-'s" \
-  "depending on wether the word appears in the files or not; " \
-  "the total number of occurrences; the word.The tab" \
-  "character is used as field separator.\n\n\t" \
-  "Read the standard input for any of the files which is \" - \"."
+#define LANG_WS__HOW_TO_USE_OPTIONS "Mandatory arguments to long options are " \
+  "mandatory for short options too."
 
-#define LANG_WS__MAN_LIMITS \
-  "The number of FILES that can be passed must be at least 2. " \
-  "The counters of the total number of occurences of the words have " \
-  "a maximum value of " XSTR(_LONG_MAX) "."
+#define LANG_WS__LONG_DESCRIPTION "prints a list of words that appear in " \
+  "several text " LANG_OPT__PARAMETER_FILES ". Each of the words listed is " \
+  "accompanied by a pattern indicating in which " LANG_OPT__PARAMETER_FILES \
+  " it appears and the total number of its occurrences in the " \
+  LANG_OPT__PARAMETER_FILES ".\n\nA word is, by default, a maximum length " \
+  "sequence of characters that do not belong to the space class. A word is " \
+  "shared when it appears in at least two " LANG_OPT__PARAMETER_FILES ". " \
+  "Only shared words are listed. The printed list is sorted in descending " \
+  "order of the number of " LANG_OPT__PARAMETER_FILES " in which the words " \
+  "appear, primary key, in descending order of the total number of " \
+  "occurrences, secondary key, and in ascending lexicographical order of " \
+  "words, tertiary key. The word comparison is understood in the sense of " \
+  "the standard function strcmp. One line of text is produced per shared " \
+  "word. The content of a line consists of three fields: the pattern with " \
+  "'x's or '-' depending on wether the word appears in the " \
+  LANG_OPT__PARAMETER_FILES " or not; the total number of occurrences; the " \
+  "word.The tab character is used as field separator.\n\nRead the standard " \
+  "input for any of the " LANG_OPT__PARAMETER_FILES " which is \"-\"."
 
-#define LANG_WS__COPYRIHT \
-  "This is freeware: you can redistribute it. There is NO WARRANTY."
+#define LANG_WS__LIMITS "The number of " LANG_OPT__PARAMETER_FILES " that " \
+  "can be passed must be at least 2. The counters of the total number of " \
+  "occurences of the words have a maximum value of " XSTR(_LONG_MAX) "."
 
-#define LANG_WS__AUTHOR_WRITTEN "Written by"
+#define LANG_WS__AUTHORS "Written by " WS_AUTHOR_NAMES "."
 
-#define LANG_WS__AUTHOR_NAME "A. MASSIAS & K.KLAK"
+#define LANG_WS__COPYRIHT "This is freeware: you can redistribute it. There " \
+  "is NO WARRANTY."
