@@ -14,6 +14,9 @@
 #define STR(x) #x
 #define XSTR(x) STR(x)
 
+#define EXEC_NAME_FORMAT "%s"
+#define _LONG_MAX 9223372036854775807
+
 #if (LANG == EN)
 #include "lang_en.h"
 #elif (LANG == FR)

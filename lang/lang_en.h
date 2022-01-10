@@ -35,7 +35,7 @@
 //  Long option names
 #define LANG_OPT_NAME_LONG__INITIAL "initial"
 #define LANG_OPT_NAME_LONG__PUNCTUATION_LIKE_SPACE "punctuation-like-space"
-#define LANG_OPT_NAME_LONG__SAME_NUMBER "same-number"
+#define LANG_OPT_NAME_LONG__SAME_NUMBER "same-numbers"
 #define LANG_OPT_NAME_LONG__TOP "top"
 #define LANG_OPT_NAME_LONG__UPPERCASING "uppercasing"
 #define LANG_OPT_NAME_LONG__HELP "help"
@@ -80,12 +80,18 @@
 #define LANG_OPT__USAGE__USAGE "Usage"
 
 //==============================================================================
+#define LANG_OPT_CATEGORY_NAME__INFORMATION "Program Information"
+#define LANG_OPT_CATEGORY_NAME__INPUT_CONTROL "Input Control"
+#define LANG_OPT_CATEGORY_NAME__OUTPUT_CONTROL "Output Control"
+
+#define LANG_FUN_OUTPUT__HELP__USAGE "Usage: " EXEC_NAME_FORMAT " [" \
+  LANG_OPT__PARAMETER_OPTION "]... " LANG_OPT__PARAMETER_FILES
 
 #define LANG_WS__SHORT_DESCRIPTION \
-  "Print a list of words shared by text files"
+  "Print a list of words shared by text files."
 
 #define LANG_WS__HOW_TO_USE_OPTIONS \
-  "Mandatory arguments to long options are mandatory for short options too"
+  "Mandatory arguments to long options are mandatory for short options too."
 
 #define LANG_WS__LONG_DESCRIPTION \
   "prints a list of words that appear in several text files. Each of the " \
@@ -109,7 +115,7 @@
 #define LANG_WS__MAN_LIMITS \
   "The number of FILES that can be passed must be at least 2. " \
   "The counters of the total number of occurences of the words have " \
-  "a maximum value of"
+  "a maximum value of " XSTR(_LONG_MAX) "."
 
 #define LANG_WS__COPYRIHT \
   "This is freeware: you can redistribute it. There is NO WARRANTY."
