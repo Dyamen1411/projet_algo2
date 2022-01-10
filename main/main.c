@@ -285,19 +285,16 @@ return_type opt__uppercasing(wsctx_parameters_t *p,
   return RETURN_NONE;
 }
 
-static void print_description(size_t offset, const char *description) {
-  struct winsize ws;
-  if (ioctl(0, TIOCGWINSZ, &ws) == -1) {
-    ws.ws_col = DEFULT_MAX_TEXT_WIDTH;
-  }
-  char buffer[ws.ws_col + 1];
-  memset(buffer, 0, ws.ws_col + 1);
+static void print_description(size_t column_count, size_t indent, size_t offset,
+    const char *description) {
+  char buffer[column_count + 1];
+  memset(buffer, 0, column_count + 1);
   unsigned int cursor = (unsigned int) offset;
   while (1) {
     for (; isspace(*description); ++cursor) {
-      if (cursor >= ws.ws_col || *description == '\n') {
-        cursor = 21;
-        printf("\n%*c", 19, ' ');
+      if (cursor >= column_count || *description == '\n') {
+        cursor = (unsigned int) indent + 1;
+        printf("\n%*c", (unsigned int) indent - 1, ' ');
       }
       if (*description != '\n') {
         putchar(*description);
@@ -311,11 +308,11 @@ static void print_description(size_t offset, const char *description) {
     }
     size_t i = 0;
     const char *base = description;
-    for (; *description != '\0' && !isspace(*description) && i < ws.ws_col;
+    for (; *description != '\0' && !isspace(*description) && i < column_count;
         ++cursor) {
-      if (cursor >= ws.ws_col) {
-        cursor = 20 + (unsigned int) i;
-        printf("\n%*c", 20, ' ');
+      if (cursor >= column_count) {
+        cursor = (unsigned int) (indent + i);
+        printf("\n%*c", (unsigned int) indent, ' ');
       }
       ++description;
       ++i;
@@ -323,31 +320,37 @@ static void print_description(size_t offset, const char *description) {
     if (i != 0) {
       memcpy(buffer, base, i);
       printf("%s", buffer);
-      memset(buffer, 0, ws.ws_col + 1);
+      memset(buffer, 0, column_count + 1);
     }
   }
   printf("\n");
 }
 
-static void print_opt(opt_t *opt) {
+static void print_opt(size_t column_count, opt_t *opt) {
+  const size_t indent = 20;
   char short_opt[4];
-  sprintf(short_opt, opt->short_name == '\0' ? "   " : "-%c,", opt->short_name);
-  printf("  %s --%s%s", short_opt, opt->long_name,
-      opt->need_argument ? "=" LANG_OPT__PARAMETER_VALUE : "");
   const unsigned int prefix_length = (unsigned int) (strlen(opt->long_name)
       + (opt->need_argument ? sizeof(LANG_OPT__PARAMETER_VALUE) : 0));
-  const bool overflow = prefix_length >= 11;
-  printf("%*c", overflow ? 4 : 12 - prefix_length, ' ');
-  print_description(overflow ? 13 + prefix_length : 21, opt->description);
+  const bool overflow = prefix_length >= (indent - 8 - 1);
+  const size_t offset = indent + 1 + (overflow ? prefix_length - 8 : 0);
+  const size_t spacer_length = overflow ? 4 : indent - 8 - prefix_length;
+  const char *long_str = opt->need_argument
+      ? "=" LANG_OPT__PARAMETER_VALUE
+      : "";
+  const char *short_format = opt->short_name == '\0' ? "   " : "-%c,";
+  sprintf(short_opt, short_format, opt->short_name);
+  printf("  %s --%s%s", short_opt, opt->long_name, long_str);
+  printf("%*c", (unsigned int) spacer_length, ' ');
+  print_description(column_count, indent, offset, opt->description);
 }
 
-#define PRINT_OPT_CATEGORY(_category) \
+#define PRINT_OPT_CATEGORY(_cc, _category) \
   printf(LANG_OPT_CATEGORY_NAME__ ## _category "\n"); \
   for (size_t i = 0; i < sizeof(options) / sizeof(opt_t); ++i) { \
     if (options[i].category != OPT_CATEGORY_ ## _category) { \
       continue; \
     } \
-    print_opt(&options[i]); \
+    print_opt((_cc), &options[i]); \
     printf("\n"); \
   } \
   printf("\n");
@@ -361,9 +364,13 @@ return_type opt__help(
   printf("\n");
   printf(LANG_WS__HOW_TO_USE_OPTIONS ".\n\n");
   printf("\n");
-  PRINT_OPT_CATEGORY(INFORMATION);
-  PRINT_OPT_CATEGORY(INPUT_CONTROL);
-  PRINT_OPT_CATEGORY(OUTPUT_CONTROL);
+  struct winsize ws;
+  if (ioctl(0, TIOCGWINSZ, &ws) == -1 || ws.ws_col < 20 + 2) {
+    ws.ws_col = DEFULT_MAX_TEXT_WIDTH;
+  }
+  PRINT_OPT_CATEGORY(ws.ws_col, INFORMATION);
+  PRINT_OPT_CATEGORY(ws.ws_col, INPUT_CONTROL);
+  PRINT_OPT_CATEGORY(ws.ws_col, OUTPUT_CONTROL);
   return RETURN_EXIT;
   print_limits();
   return RETURN_EXIT;
