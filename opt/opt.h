@@ -25,6 +25,7 @@ typedef struct opt_t {
   bool need_argument;
   return_type (*process) (wsctx_parameters_t *p, const char *arg);
   const char *description;
+  unsigned int category;
 } opt_t;
 
 return_type parse_opt(const int argc, char **argv, int *arg_pos,
