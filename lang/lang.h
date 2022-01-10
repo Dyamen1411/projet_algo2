@@ -16,6 +16,9 @@
 
 #define EXEC_NAME_FORMAT "%s"
 #define _LONG_MAX 9223372036854775807
+#define TEXT_FW_BOLD "\033[1m"
+#define TEXT_FW_UNDERLINED "\033[4m"
+#define TEXT_FW_NONE "\033[0m"
 
 #if (LANG == EN)
 #include "lang_en.h"
@@ -26,9 +29,6 @@
 #elif (LANG == IT)
 #include "lang_it.h"
 #endif
-
-#undef XSTR
-#undef STR
 
 #undef IT
 #undef PL

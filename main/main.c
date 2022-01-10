@@ -15,13 +15,9 @@
 #include <sys/ioctl.h>
 
 #define WS_VERSION "2022/01/10"
-
 #define LOCAL_DIRECTORY_PREFIX "./"
-
 #define DEFULT_MAX_TEXT_WIDTH 80
-
-#define STR(x) #x
-#define XSTR(x) STR(x)
+#define DEFAULT_INDENT 20
 
 #define NEW_OPTION(_name, _need_argument, _process_function, _category) \
   { \
@@ -180,64 +176,6 @@ dispose:
   return r;
 }
 
-// static void print_usage(const char *exec_name) {
-//   printf(LANG_OPT__USAGE__USAGE ": \033[1m%s\033[0m ["
-//       LANG_OPT__PARAMETER_OPTION "]... " LANG_OPT__PARAMETER_FILES "\n",
-//       exec_name);
-// }
-
-static void print_usage_synopsis(const char *exec_name) {
-  printf("\033[1m%s\033[0m [" LANG_OPT__PARAMETER_OPTION "]... "
-      LANG_OPT__PARAMETER_FILES "\n",
-      exec_name);
-}
-
-// #define PUTC(x, c)  {putchar(c); ++x; }
-// #define MOVE_TO(x, n)  {while (x < n) { PUTC(x, ' ');}}
-// #define NEW_LINE(x) {putchar('\n'); x = 0; }
-// static void opt_indentation(const char *s, int x, int indent, int width) {
-//   const char *p = s;
-//   while (*p != '\0') {
-//     const char *q = p;
-//     while (*q != '\0' && !isspace(*q)) {
-//       ++q;
-//     }
-//     if (x + q - p < width) {
-//       if (x > indent) {
-//         PUTC(x, ' ');
-//       }
-//     } else {
-//       NEW_LINE(x);
-//     }
-//     MOVE_TO(x, indent);
-//     while (p < q) {
-//       PUTC(x, *p);
-//       ++p;
-//     }
-//     while (isspace(*p)) {
-//       ++p;
-//     }
-//   }
-//   NEW_LINE(x);
-// }
-
-static void print_short_description(const char *exec_name) {
-  printf("\033[1m%s\033[0m - " LANG_WS__SHORT_DESCRIPTION "\n", exec_name);
-}
-
-static void print_long_description(const char *exec_name) {
-  printf("\033[1m%s\033[0m - " LANG_WS__LONG_DESCRIPTION "\n", exec_name);
-}
-
-static void print_limits() {
-  printf(
-      LANG_WS__MAN_LIMITS " %zu.\n", sizeof(size_t));
-}
-
-static void print_author() {
-  printf(LANG_WS__AUTHOR_WRITTEN " " LANG_WS__AUTHOR_NAME "\n");
-}
-
 static bool is_digit(char c) {
   return '0' <= c && c <= '9';
 }
@@ -344,37 +282,46 @@ return_type opt__help(
   return RETURN_EXIT;
 }
 
-return_type opt__man(
-    __attribute__((unused)) wsctx_parameters_t *p,
+return_type opt__man(wsctx_parameters_t *p,
     __attribute__((unused)) const char *arg) {
-  printf("\033[1mNAME\033[0m\n\t");
-  print_short_description("ws");
-  printf("\n");
-  // synopsys
-  printf("\033[1mSYNOPSYS\033[0m\n\t");
-  print_usage_synopsis("ws");
-  printf("\n");
-  // description
-  printf("\033[1mDESCRIPTION\033[0m\n\n\t");
-  print_long_description("ws");
-  printf("\n");
-  // options
-  printf("\033[1mOPTIONS\033[0m\n\n");
-  // print_options_man();
-  printf("\n");
-  // limits
-  printf("\033[1mLIMITS\033[0m\n\t");
-  print_limits("ws");
-  printf("\n");
-  // author
-  printf("\033[1mAUTHOR\033[0m\n\t");
-  print_author();
-  printf("\n");
-  // copyright
-  printf("\033[1mCOPYRIGHT\033[0m\n\t");
-  // print_version("ws");
-  // print_copyright("ws");
-  printf("\n");
+  struct winsize ws;
+  if (ioctl(0, TIOCGWINSZ, &ws) == -1 || ws.ws_col < DEFAULT_INDENT + 2) {
+    ws.ws_col = DEFULT_MAX_TEXT_WIDTH;
+  }
+  printf(TEXT_FW_BOLD LANG_MANN_SECTION__NAME TEXT_FW_NONE "\n");
+  const size_t exec_name_length = strlen(p->exec_name);
+  printf("%*c%s", 8, ' ', p->exec_name);
+  print_description(ws.ws_col, 8, exec_name_length,
+      " - " LANG_WS__SHORT_DESCRIPTION);
+  putchar('\n');
+  // printf("\033[1mNAME\033[0m\n\t");
+  // print_short_description("ws");
+  // printf("\n");
+  // // synopsys
+  // printf("\033[1mSYNOPSYS\033[0m\n\t");
+  // print_usage_synopsis("ws");
+  // printf("\n");
+  // // description
+  // printf("\033[1mDESCRIPTION\033[0m\n\n\t");
+  // print_long_description("ws");
+  // printf("\n");
+  // // options
+  // printf("\033[1mOPTIONS\033[0m\n\n");
+  // // print_options_man();
+  // printf("\n");
+  // // limits
+  // printf("\033[1mLIMITS\033[0m\n\t");
+  // print_limits("ws");
+  // printf("\n");
+  // // author
+  // printf("\033[1mAUTHOR\033[0m\n\t");
+  // print_author();
+  // printf("\n");
+  // // copyright
+  // printf("\033[1mCOPYRIGHT\033[0m\n\t");
+  // // print_version("ws");
+  // // print_copyright("ws");
+  // printf("\n");
   return RETURN_EXIT;
 }
 
@@ -437,11 +384,11 @@ void print_description(size_t column_count, size_t indent, size_t offset,
       memset(buffer, 0, column_count + 1);
     }
   }
-  printf("\n");
+  putchar('\n');
 }
 
 void print_opt(size_t column_count, opt_t *opt) {
-  const size_t indent = 20;
+  const size_t indent = DEFAULT_INDENT;
   char short_opt[4];
   const unsigned int prefix_length = (unsigned int) (strlen(opt->long_name)
       + (opt->need_argument ? sizeof(LANG_OPT__PARAMETER_VALUE) : 0));

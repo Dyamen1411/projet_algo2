@@ -76,9 +76,8 @@
 #define LANG_OPT_DESCRIPTION__USAGE "Print a short usage message and exit."
 #define LANG_OPT_DESCRIPTION__VERSION "Print version information."
 
-//  Usage
-#define LANG_OPT__USAGE__USAGE "Usage"
-
+//==============================================================================
+#define LANG_MANN_SECTION__NAME "NAME"
 //==============================================================================
 #define LANG_OPT_CATEGORY_NAME__INFORMATION "Program Information"
 #define LANG_OPT_CATEGORY_NAME__INPUT_CONTROL "Input Control"
