@@ -22,6 +22,7 @@
 
 #define MAKE_BOLD(text) TEXT_FW_BOLD text TEXT_FW_NONE
 #define MAKE_UNDERLINED(text) TEXT_FW_UNDERLINED text TEXT_FW_NONE
+#define _MAKE_UNDERLINED(text) text
 
 #if (LANG == EN)
 #include "lang_en.h"

@@ -29,21 +29,24 @@
     .category = OPT_CATEGORY_ ## _category \
   }
 
-static void print_opt(size_t column_count, opt_t *opt);
-static void print_description(size_t column_count, size_t indent, size_t offset,
-    const char *description);
+#define PRINT_OPT_CATEGORY(_cc, _category) \
+  printf(LANG_OPT_CATEGORY_NAME__ ## _category "\n"); \
+  for (size_t i = 0; i < sizeof(options) / sizeof(opt_t); ++i) { \
+    if (options[i].category != OPT_CATEGORY_ ## _category) { \
+      continue; \
+    } \
+    print_opt((_cc), &options[i]); \
+    printf("\n"); \
+  } \
+  printf("\n");
 
-static return_type opt__help(wsctx_parameters_t *p, const char *arg);
-static return_type opt__initial(wsctx_parameters_t *p, const char *arg);
-static return_type opt__punctuation_like_space(wsctx_parameters_t *p,
-    const char *arg);
-static return_type opt__same_numbers(wsctx_parameters_t *p, const char *arg);
-static return_type opt__top(wsctx_parameters_t *p, const char *arg);
-static return_type opt__uppercasing(wsctx_parameters_t *p, const char *arg);
-static return_type opt__man(wsctx_parameters_t *p, const char *arg);
-static return_type opt__usage(wsctx_parameters_t *p, const char *arg);
-static return_type opt__version(wsctx_parameters_t *p, const char *arg);
+#define MAKE_SECTION(_title) MAKE_BOLD(LANG_MANN_SECTION__ ## _title) "\n"
+#define MAKE_CATEGORY(_title) "    " \
+  MAKE_BOLD(LANG_OPT_CATEGORY_NAME__ ## _title) "\n"
 
+#define PRINT_CATEGORY_MAN(_category, _column_count) \
+  printf(MAKE_CATEGORY(_category)); \
+  _print_section_man(OPT_CATEGORY_ ## _category, (_column_count))
 typedef enum opt_category {
   OPT_CATEGORY_INFORMATION,
   OPT_CATEGORY_INPUT_CONTROL,
@@ -61,6 +64,24 @@ typedef enum opt_index {
   OPT_INDEX_USAGE,
   OPT_INDEX_VERSION
 } opt_index;
+
+static void print_opt(size_t column_count, opt_t *opt);
+static void _print_description(size_t column_count, size_t indent,
+    size_t offset, const char *description, const char *match);
+static void print_description(size_t column_count, size_t indent, size_t offset,
+    const char *description);
+static void _print_section_man(opt_category category, size_t column_count);
+
+static return_type opt__help(wsctx_parameters_t *p, const char *arg);
+static return_type opt__initial(wsctx_parameters_t *p, const char *arg);
+static return_type opt__punctuation_like_space(wsctx_parameters_t *p,
+    const char *arg);
+static return_type opt__same_numbers(wsctx_parameters_t *p, const char *arg);
+static return_type opt__top(wsctx_parameters_t *p, const char *arg);
+static return_type opt__uppercasing(wsctx_parameters_t *p, const char *arg);
+static return_type opt__man(wsctx_parameters_t *p, const char *arg);
+static return_type opt__usage(wsctx_parameters_t *p, const char *arg);
+static return_type opt__version(wsctx_parameters_t *p, const char *arg);
 
 static opt_t options[] = {
   NEW_OPTION(INITIAL, true, opt__initial, INPUT_CONTROL),
@@ -250,17 +271,6 @@ return_type opt__uppercasing(wsctx_parameters_t *p,
   return RETURN_NONE;
 }
 
-#define PRINT_OPT_CATEGORY(_cc, _category) \
-  printf(LANG_OPT_CATEGORY_NAME__ ## _category "\n"); \
-  for (size_t i = 0; i < sizeof(options) / sizeof(opt_t); ++i) { \
-    if (options[i].category != OPT_CATEGORY_ ## _category) { \
-      continue; \
-    } \
-    print_opt((_cc), &options[i]); \
-    printf("\n"); \
-  } \
-  printf("\n");
-
 return_type opt__help(
     __attribute__((unused)) wsctx_parameters_t *p,
     __attribute__((unused)) const char *arg) {
@@ -282,8 +292,6 @@ return_type opt__help(
   return RETURN_EXIT;
 }
 
-#define MAKE_SECTION(_name) MAKE_BOLD(LANG_MANN_SECTION__ ## _name) "\n"
-
 return_type opt__man(wsctx_parameters_t *p,
     __attribute__((unused)) const char *arg) {
   struct winsize ws;
@@ -292,53 +300,30 @@ return_type opt__man(wsctx_parameters_t *p,
   }
   const int indent = 8;
   const size_t exec_name_length = strlen(p->exec_name);
+  const size_t offset = (size_t) indent + exec_name_length;
   printf("%zu\n", exec_name_length);
   //
   printf(MAKE_SECTION(NAME));
   printf("%*c%s", indent, ' ', p->exec_name);
-  print_description(ws.ws_col, indent + 1, exec_name_length,
+  print_description(ws.ws_col, indent, offset,
       " - " LANG_WS__SHORT_DESCRIPTION);
   putchar('\n');
   //
   printf(MAKE_SECTION(SYNOPSIS));
   printf("%*c" MAKE_BOLD(EXEC_NAME_FORMAT), indent, ' ', p->exec_name);
-  print_description(ws.ws_col, indent + 1, exec_name_length,
-      " " LANG_WS__SYNOPSIS);
+  print_description(ws.ws_col, indent, offset, " " LANG_WS__SYNOPSIS);
   putchar('\n');
   //
   printf(MAKE_SECTION(DESCRIPTION));
   printf("\n%*c" MAKE_BOLD(EXEC_NAME_FORMAT), indent, ' ', p->exec_name);
-  print_description(ws.ws_col, indent + 1, exec_name_length,
-      " " LANG_WS__LONG_DESCRIPTION);
+  _print_description(ws.ws_col, indent, offset, " " LANG_WS__LONG_DESCRIPTION,
+      LANG_OPT__PARAMETER_FILES_LOWER);
   putchar('\n');
-  // printf("\033[1mNAME\033[0m\n\t");
-  // print_short_description("ws");
-  // printf("\n");
-  // // synopsys
-  // printf("\033[1mSYNOPSYS\033[0m\n\t");
-  // print_usage_synopsis("ws");
-  // printf("\n");
-  // // description
-  // printf("\033[1mDESCRIPTION\033[0m\n\n\t");
-  // print_long_description("ws");
-  // printf("\n");
-  // // options
-  // printf("\033[1mOPTIONS\033[0m\n\n");
-  // // print_options_man();
-  // printf("\n");
-  // // limits
-  // printf("\033[1mLIMITS\033[0m\n\t");
-  // print_limits("ws");
-  // printf("\n");
-  // // author
-  // printf("\033[1mAUTHOR\033[0m\n\t");
-  // print_author();
-  // printf("\n");
-  // // copyright
-  // printf("\033[1mCOPYRIGHT\033[0m\n\t");
-  // // print_version("ws");
-  // // print_copyright("ws");
-  // printf("\n");
+  //
+  printf(MAKE_SECTION(OPTIONS));
+  PRINT_CATEGORY_MAN(INFORMATION, ws.ws_col);
+  PRINT_CATEGORY_MAN(INPUT_CONTROL, ws.ws_col);
+  PRINT_CATEGORY_MAN(OUTPUT_CONTROL, ws.ws_col);
   return RETURN_EXIT;
 }
 
@@ -352,22 +337,25 @@ return_type opt__usage(
 return_type opt__version(
     __attribute__((unused)) wsctx_parameters_t *p,
     __attribute__((unused)) const char *arg) {
-  // LANG_WS__COPYRIHT
   printf("%s - " WS_VERSION "\n" LANG_WS__COPYRIHT "\n", p->exec_name);
   return RETURN_EXIT;
 }
 
-void print_description(size_t column_count, size_t indent, size_t offset,
-    const char *description) {
+void _print_description(size_t column_count, size_t indent, size_t offset,
+    const char *description, const char *match) {
   char buffer[column_count + 1];
   memset(buffer, 0, column_count + 1);
+  bool search = match != NULL;
+  size_t match_length = search
+      ? strlen(match)
+      : 0;
   unsigned int cursor = (unsigned int) offset;
   while (1) {
     while (isspace(*description)) {
       if (cursor >= column_count || *description == '\n') {
         cursor = (unsigned int) indent + 1;
         putchar('\n');
-        for (size_t j = 1; j < indent; ++j) {
+        for (size_t j = 0; j < indent; ++j) {
           putchar(' ');
         }
         break;
@@ -381,7 +369,7 @@ void print_description(size_t column_count, size_t indent, size_t offset,
     while (isspace(*description)) {
       if (*description == '\n') {
         putchar('\n');
-        for (size_t j = 1; j < indent; ++j) {
+        for (size_t j = 0; j < indent; ++j) {
           putchar(' ');
         }
       }
@@ -392,11 +380,12 @@ void print_description(size_t column_count, size_t indent, size_t offset,
     }
     size_t i = 0;
     const char *base = description;
+    bool underline = search && strncmp(base, match, match_length) == 0;
     while (*description != '\0' && !isspace(*description) && i < column_count) {
       if (cursor >= column_count) {
         cursor = (unsigned int) (indent + i);
         putchar('\n');
-        for (size_t j = 1; j < indent; ++j) {
+        for (size_t j = 0; j < indent; ++j) {
           putchar(' ');
         }
       }
@@ -405,12 +394,22 @@ void print_description(size_t column_count, size_t indent, size_t offset,
       ++cursor;
     }
     if (i != 0) {
+      if (underline) {
+        printf(MAKE_UNDERLINED("%s"), match);
+        base += match_length;
+        i -= match_length;
+      }
       memcpy(buffer, base, i);
       printf("%s", buffer);
       memset(buffer, 0, column_count + 1);
     }
   }
   putchar('\n');
+}
+
+void print_description(size_t column_count, size_t indent, size_t offset,
+    const char *description) {
+  _print_description(column_count, indent, offset, description, NULL);
 }
 
 void print_opt(size_t column_count, opt_t *opt) {
@@ -429,4 +428,34 @@ void print_opt(size_t column_count, opt_t *opt) {
   printf("  %s --%s%s", short_opt, opt->long_name, long_str);
   printf("%*c", (unsigned int) spacer_length, ' ');
   print_description(column_count, indent, offset, opt->description);
+}
+
+void _print_section_man(opt_category category, size_t column_count) {
+  for (size_t i = 0; i < sizeof(options) / sizeof(opt_t); ++i) {
+    if (options[i].category != category) {
+      continue;
+    }
+    const bool has_short_name = options[i].short_name != '\0';
+    const bool has_long_name = *options[i].long_name != '\0';
+    printf("%*c", 8, ' ');
+    if (has_short_name) {
+      printf(MAKE_BOLD("%c"), options[i].short_name);
+      if (options[i].need_argument) {
+        printf(" " MAKE_UNDERLINED("%s"), LANG_OPT__PARAMETER_VALUE_LOWER);
+      }
+    }
+    if (has_short_name && has_long_name) {
+      printf(", ");
+    }
+    if (has_long_name) {
+      printf(MAKE_BOLD("--%s"), options[i].long_name);
+      if (options[i].need_argument) {
+        printf("=" MAKE_UNDERLINED("%s"), LANG_OPT__PARAMETER_VALUE_LOWER);
+      }
+    }
+    putchar('\n');
+    printf("%*c", 2 * 8, ' ');
+    print_description(column_count, 2 * 8, 2 * 8, options[i].description);
+    putchar('\n');
+  }
 }
