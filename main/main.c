@@ -170,6 +170,9 @@ static void print_copyright() {
   printf(LANG_WS__COPYRIHT);
 }
 
+// #define PUTC(x, c)  {putchar(c); ++x; }
+// #define MOVE_TO(x, n)  {while (x < n) { PUTC(x, ' ');}}
+// #define NEW_LINE(x) {putchar('\n'); x = 0; }
 // static void opt_indentation(const char *s, int x, int indent, int width) {
 //   const char *p = s;
 //   while (*p != '\0') {
@@ -177,15 +180,23 @@ static void print_copyright() {
 //     while (*q != '\0' && !isspace(*q)) {
 //       ++q;
 //     }
-//     if ( x+q -p <width) {
-//       if (x >indent) {
+//     if (x + q - p < width) {
+//       if (x > indent) {
 //         PUTC(x, ' ');
+//       }
 //     } else {
-//         NEW_LINE(x);
+//       NEW_LINE(x);
 //     }
-//     AD
+//     MOVE_TO(x, indent);
+//     while (p < q) {
+//       PUTC(x, *p);
+//       ++p;
+//     }
+//     while (isspace(*p)) {
+//       ++p;
+//     }
 //   }
-
+//   NEW_LINE(x);
 // }
 
 static void print_short_description(const char *exec_name) {
