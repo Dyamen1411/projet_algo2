@@ -1,0 +1,119 @@
+\documentclass[12pt, letterpaper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[ margin=1in]{geometry}
+\usepackage{color}
+
+
+\title{Rapport de projet d'algorithmique 2 : 
+\\structures récursives, linéaires et binaires}
+\author{KLAK Karolina et MASSIAS Antoine \thanks 
+{Rapport réalisé avec laTex} }
+\date {Janvier 2022}
+
+
+\setlength{\parindent}{3em}
+\setlength{\parskip}{1em}
+%corps du document
+\begin{document}
+\begin{titlepage}
+    \maketitle
+\end{titlepage}
+
+
+\tableofcontents
+
+\chapter{Généralités}
+
+Ce projet constitue l'aboutissement du projet
+d'algorithmique 2, du semestre 3 de la licence 
+d'informatique à l'UFR Sciences et Techniques de Rouen.
+
+
+Le projet a été réalisé par A. Massias et K. Klak dans le cadre de leurs études.
+Ce projet consiste en la réalisation, en C, d'un exécutable produisant sur la sortie
+ standard une liste de mots partagés. En effet, cet exécutable doit,
+  au terme de plusieurs noms de fichiers inscrits sur la ligne de commande de trier les mots figurant dans chacun d'eux, 
+  et d'en conclure une liste de "mots" dits "partagés" entre les fichiers, tout en spécifiant leur motif et leur nombre total d'occurences.
+  A titre informatif, le motif fait référence aux fichiers dans lesquels ledit mot apparaît.
+  Il se compose d'une suite de 'x' ou '-' en focntion de la présence ou non du mot dans chacun des fichiers.
+\section{Spécifications}
+La liste dont il est question est triée selon trois filtres : 
+\\-ordre décroissant du nombre de fichiers dans lesquels le mot figure,
+\\-ordre décroissant des nombres totaux d'occurrences,
+\\-ordre lexicographique croissant des mots.
+
+Une ligne est réalisé pour chaque mot, avec le descriptif ci-dessus.
+ Chaque liste est composée de dix lignes, limite fixée par défaut qu'il
+  est possible de modifier par le biais d'options (cf. 1.2 Options).
+Une autre limitation fixée par défaut : le nombre de caractères de chacun
+des mots étant pris en compte. En effet, par défaut seuls les 63 premeirs
+caractères d'un mot sont pris en compte. Au-delà de cette limite, le mot est 
+coupé. 
+\\ \\ \\ \\ \\ \\ \\ 
+\textcolor{blue}{
+\emph{Exemple : 
+L'exécutable produit par défaut les lignes de textes suivantes : }}
+\\\textbf{\$} ./ws textes/tartuffe.txt textes/lesmiserables.txt
+\\./ws: Word from 'textes/lesmiserables.txt' at line 33239 cut: 
+'paroisse-meurs-de-faim-si-tu-as-du-feu-meurs-de-froid-si-tu-as-...'.
+\\./ws: Word from 'textes/lesmiserables.txt' at line 62928 cut: 
+'--L'agent-de-police-Ja-vert-a-ete-trouve-noye-sous-un-bateau-du...'.
+\\xx      22021   de
+\\xx      15256   la
+\\xx      13062   et
+\\xx      11685   a
+\\xx      11194   le
+\\xx      7252    les
+\\xx      6114    un
+\\xx      5667    que
+\\xx      5444    il
+\\xx      5375    qui
+
+\emph{
+Il y a précision si des mots ont été coupés.
+Ainsi comme convenu seules 10 lignes de textes sont affichées.
+\\Le motif ici est 'xx' pour chacun des mots de la liste : cela signifie 
+ que les mots apparaissent dans les deux fichiers. \\Le nombre qui suit 
+ indique le nombre d'occurrences totales, dans tous les fichiers.
+ \\ Enfin, en toute logique, la dernière chaine de caractères
+  de la ligne correspond au mot, entier ou coupé.}
+
+\section{Options}
+En totalité, cinq options coexistent : deux d'entre elles concernent 
+le nombre de lignes de mots, une concernant la longueur maximale du 
+préfixe du mot, et enfin deux sur la notion du mot.
+\\En outre : 
+\\- '-t' : limite du nombre de lignes de textes ( limite du nombre de 
+mots à produire)
+\\- '-s' : production de lignes supplémentaires de tous les possibles mots
+dont le motif et le nombre d'occurrences sont égaux à ceux du dernier 
+des mots associés à la limite
+\\- '-i' : fixer la longueur maximale du préfixe de chaque mot
+\\- '-p' : permet de ne plus considérer 
+une marque de ponctuation comme un "mot"
+\\- '-u' : permet de convertir un caractère correspondant à une lettre 
+minuscule en un caractère de lettre majuscule
+\\ \\ \\ \\
+
+\textcolor{blue}{
+\emph{Exemple : ci-dessous les lignes de textes en sortie avec 
+l'utilisation des 5 options.} }
+
+\noindent \textbf{\$} ./ws -t 12 -s -i 5 -p -u textes/toujoursetjamais.txt  textes/lecid.txt textes/lesmiserables.txt textes/lavare.txt
+\\...
+\\./ws: Word from 'textes/lecid.txt' at line 34 cut: 'TEMPS...'.
+\\./ws: Word from 'textes/lecid.txt' at line 34 cut: 'VAILL...'.
+\\xxxx    18020   LA
+\\xxxx    14920   ET
+\\xxxx    13995   A
+\\xxxx    13407   LE
+\\xxxx    11824   L
+\\xxxx    8742    UN
+\\xxxx    8396    LES
+\\xxxx    6531    D
+\\xxxx    6246    UNE
+\\xxxx    6169    EST
+\\xxxx    5943    QUI
+\\xxxx    5671    DANS
+
+\end{document}
