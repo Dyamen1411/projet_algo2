@@ -35,7 +35,7 @@
 //  Long option names
 #define LANG_OPT_NAME_LONG__INITIAL "initial"
 #define LANG_OPT_NAME_LONG__PUNCTUATION_LIKE_SPACE "punctuation-like-space"
-#define LANG_OPT_NAME_LONG__SAME_NUMBER "same-number"
+#define LANG_OPT_NAME_LONG__SAME_NUMBER "same-numbers"
 #define LANG_OPT_NAME_LONG__TOP "top"
 #define LANG_OPT_NAME_LONG__UPPERCASING "uppercasing"
 #define LANG_OPT_NAME_LONG__HELP "help"
@@ -80,6 +80,12 @@
 #define LANG_OPT__USAGE__USAGE "Usage"
 
 //==============================================================================
+#define LANG_OPT_CATEGORY_NAME__INFORMATION "Program Information"
+#define LANG_OPT_CATEGORY_NAME__INPUT_CONTROL "Input Control"
+#define LANG_OPT_CATEGORY_NAME__OUTPUT_CONTROL "Output Control"
+
+#define LANG_FUN_OUTPUT__HELP__USAGE "Usage: " EXEC_NAME_FORMAT " [" \
+  LANG_OPT__PARAMETER_OPTION "]... " LANG_OPT__PARAMETER_FILES
 
 #define LANG_WS__SHORT_DESCRIPTION \
   "Print a list of words shared by text files"

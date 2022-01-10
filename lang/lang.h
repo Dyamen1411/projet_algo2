@@ -14,6 +14,8 @@
 #define STR(x) #x
 #define XSTR(x) STR(x)
 
+#define EXEC_NAME_FORMAT "%s"
+
 #if (LANG == EN)
 #include "lang_en.h"
 #elif (LANG == FR)
