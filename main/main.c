@@ -31,6 +31,10 @@
     .category = OPT_CATEGORY_ ## _category \
   }
 
+static void print_opt(size_t column_count, opt_t *opt);
+static void print_description(size_t column_count, size_t indent, size_t offset,
+    const char *description);
+
 static return_type opt__help(wsctx_parameters_t *p, const char *arg);
 static return_type opt__initial(wsctx_parameters_t *p, const char *arg);
 static return_type opt__punctuation_like_space(wsctx_parameters_t *p,
@@ -285,71 +289,6 @@ return_type opt__uppercasing(wsctx_parameters_t *p,
   return RETURN_NONE;
 }
 
-static void print_description(size_t column_count, size_t indent, size_t offset,
-    const char *description) {
-  char buffer[column_count + 1];
-  memset(buffer, 0, column_count + 1);
-  unsigned int cursor = (unsigned int) offset;
-  while (1) {
-    for (; isspace(*description); ++cursor) {
-      if (cursor >= column_count || *description == '\n') {
-        cursor = (unsigned int) indent + 1;
-        putchar('\n');
-        for (size_t j = 1; j < indent; ++j) {
-          putchar(' ');
-        }
-      }
-      if (*description != '\n') {
-        putchar(*description);
-      } else {
-        --cursor;
-      }
-      ++description;
-    }
-    if (*description == '\0') {
-      break;
-    }
-    size_t i = 0;
-    const char *base = description;
-    for (; *description != '\0' && !isspace(*description) && i < column_count;
-        ++cursor) {
-      if (cursor >= column_count) {
-        cursor = (unsigned int) (indent + i);
-        putchar('\n');
-        for (size_t j = 1; j < indent; ++j) {
-          putchar(' ');
-        }
-      }
-      ++description;
-      ++i;
-    }
-    if (i != 0) {
-      memcpy(buffer, base, i);
-      printf("%s", buffer);
-      memset(buffer, 0, column_count + 1);
-    }
-  }
-  printf("\n");
-}
-
-static void print_opt(size_t column_count, opt_t *opt) {
-  const size_t indent = 20;
-  char short_opt[4];
-  const unsigned int prefix_length = (unsigned int) (strlen(opt->long_name)
-      + (opt->need_argument ? sizeof(LANG_OPT__PARAMETER_VALUE) : 0));
-  const bool overflow = prefix_length >= (indent - 8 - 1);
-  const size_t offset = indent + 1 + (overflow ? prefix_length - 8 : 0);
-  const size_t spacer_length = overflow ? 4 : indent - 8 - prefix_length;
-  const char *long_str = opt->need_argument
-      ? "=" LANG_OPT__PARAMETER_VALUE
-      : "";
-  const char *short_format = opt->short_name == '\0' ? "   " : "-%c,";
-  sprintf(short_opt, short_format, opt->short_name);
-  printf("  %s --%s%s", short_opt, opt->long_name, long_str);
-  printf("%*c", (unsigned int) spacer_length, ' ');
-  print_description(column_count, indent, offset, opt->description);
-}
-
 #define PRINT_OPT_CATEGORY(_cc, _category) \
   printf(LANG_OPT_CATEGORY_NAME__ ## _category "\n"); \
   for (size_t i = 0; i < sizeof(options) / sizeof(opt_t); ++i) { \
@@ -428,4 +367,69 @@ return_type opt__version(
   print_version("ws");
   print_copyright();
   return RETURN_EXIT;
+}
+
+void print_description(size_t column_count, size_t indent, size_t offset,
+    const char *description) {
+  char buffer[column_count + 1];
+  memset(buffer, 0, column_count + 1);
+  unsigned int cursor = (unsigned int) offset;
+  while (1) {
+    for (; isspace(*description); ++cursor) {
+      if (cursor >= column_count || *description == '\n') {
+        cursor = (unsigned int) indent + 1;
+        putchar('\n');
+        for (size_t j = 1; j < indent; ++j) {
+          putchar(' ');
+        }
+      }
+      if (*description != '\n') {
+        putchar(*description);
+      } else {
+        --cursor;
+      }
+      ++description;
+    }
+    if (*description == '\0') {
+      break;
+    }
+    size_t i = 0;
+    const char *base = description;
+    for (; *description != '\0' && !isspace(*description) && i < column_count;
+        ++cursor) {
+      if (cursor >= column_count) {
+        cursor = (unsigned int) (indent + i);
+        putchar('\n');
+        for (size_t j = 1; j < indent; ++j) {
+          putchar(' ');
+        }
+      }
+      ++description;
+      ++i;
+    }
+    if (i != 0) {
+      memcpy(buffer, base, i);
+      printf("%s", buffer);
+      memset(buffer, 0, column_count + 1);
+    }
+  }
+  printf("\n");
+}
+
+void print_opt(size_t column_count, opt_t *opt) {
+  const size_t indent = 20;
+  char short_opt[4];
+  const unsigned int prefix_length = (unsigned int) (strlen(opt->long_name)
+      + (opt->need_argument ? sizeof(LANG_OPT__PARAMETER_VALUE) : 0));
+  const bool overflow = prefix_length >= (indent - 8 - 1);
+  const size_t offset = indent + 1 + (overflow ? prefix_length - 8 : 0);
+  const size_t spacer_length = overflow ? 4 : indent - 8 - prefix_length;
+  const char *long_str = opt->need_argument
+      ? "=" LANG_OPT__PARAMETER_VALUE
+      : "";
+  const char *short_format = opt->short_name == '\0' ? "   " : "-%c,";
+  sprintf(short_opt, short_format, opt->short_name);
+  printf("  %s --%s%s", short_opt, opt->long_name, long_str);
+  printf("%*c", (unsigned int) spacer_length, ' ');
+  print_description(column_count, indent, offset, opt->description);
 }
