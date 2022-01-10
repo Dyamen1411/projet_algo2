@@ -88,10 +88,10 @@
   LANG_OPT__PARAMETER_OPTION "]... " LANG_OPT__PARAMETER_FILES
 
 #define LANG_WS__SHORT_DESCRIPTION \
-  "Print a list of words shared by text files"
+  "Print a list of words shared by text files."
 
 #define LANG_WS__HOW_TO_USE_OPTIONS \
-  "Mandatory arguments to long options are mandatory for short options too"
+  "Mandatory arguments to long options are mandatory for short options too."
 
 #define LANG_WS__LONG_DESCRIPTION \
   "prints a list of words that appear in several text files. Each of the " \
@@ -115,7 +115,7 @@
 #define LANG_WS__MAN_LIMITS \
   "The number of FILES that can be passed must be at least 2. " \
   "The counters of the total number of occurences of the words have " \
-  "a maximum value of"
+  "a maximum value of " XSTR(_LONG_MAX) "."
 
 #define LANG_WS__COPYRIHT \
   "This is freeware: you can redistribute it. There is NO WARRANTY."

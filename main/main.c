@@ -294,7 +294,10 @@ static void print_description(size_t column_count, size_t indent, size_t offset,
     for (; isspace(*description); ++cursor) {
       if (cursor >= column_count || *description == '\n') {
         cursor = (unsigned int) indent + 1;
-        printf("\n%*c", (unsigned int) indent - 1, ' ');
+        putchar('\n');
+        for (size_t j = 1; j < indent; ++j) {
+          putchar(' ');
+        }
       }
       if (*description != '\n') {
         putchar(*description);
@@ -312,7 +315,10 @@ static void print_description(size_t column_count, size_t indent, size_t offset,
         ++cursor) {
       if (cursor >= column_count) {
         cursor = (unsigned int) (indent + i);
-        printf("\n%*c", (unsigned int) indent, ' ');
+        putchar('\n');
+        for (size_t j = 1; j < indent; ++j) {
+          putchar(' ');
+        }
       }
       ++description;
       ++i;
@@ -362,7 +368,7 @@ return_type opt__help(
   printf("\n");
   printf(LANG_WS__SHORT_DESCRIPTION "\n");
   printf("\n");
-  printf(LANG_WS__HOW_TO_USE_OPTIONS ".\n\n");
+  printf(LANG_WS__HOW_TO_USE_OPTIONS "\n");
   printf("\n");
   struct winsize ws;
   if (ioctl(0, TIOCGWINSZ, &ws) == -1 || ws.ws_col < 20 + 2) {
@@ -371,8 +377,8 @@ return_type opt__help(
   PRINT_OPT_CATEGORY(ws.ws_col, INFORMATION);
   PRINT_OPT_CATEGORY(ws.ws_col, INPUT_CONTROL);
   PRINT_OPT_CATEGORY(ws.ws_col, OUTPUT_CONTROL);
-  return RETURN_EXIT;
-  print_limits();
+  print_description(ws.ws_col, 0, 0, LANG_WS__MAN_LIMITS);
+  printf("\n");
   return RETURN_EXIT;
 }
 
