@@ -14,6 +14,8 @@
 #include <string.h>
 #include <sys/ioctl.h>
 
+#define WS_VERSION "2022/01/10"
+
 #define LOCAL_DIRECTORY_PREFIX "./"
 
 #define DEFULT_MAX_TEXT_WIDTH 80
@@ -190,10 +192,6 @@ static void print_usage_synopsis(const char *exec_name) {
       exec_name);
 }
 
-static void print_copyright() {
-  printf(LANG_WS__COPYRIHT);
-}
-
 // #define PUTC(x, c)  {putchar(c); ++x; }
 // #define MOVE_TO(x, n)  {while (x < n) { PUTC(x, ' ');}}
 // #define NEW_LINE(x) {putchar('\n'); x = 0; }
@@ -238,10 +236,6 @@ static void print_limits() {
 
 static void print_author() {
   printf(LANG_WS__AUTHOR_WRITTEN " " LANG_WS__AUTHOR_NAME "\n");
-}
-
-static void print_version(const char *exec_name) {
-  printf("%s - 2022/01/06\n\t", exec_name);
 }
 
 static bool is_digit(char c) {
@@ -378,8 +372,8 @@ return_type opt__man(
   printf("\n");
   // copyright
   printf("\033[1mCOPYRIGHT\033[0m\n\t");
-  print_version("ws");
-  print_copyright("ws");
+  // print_version("ws");
+  // print_copyright("ws");
   printf("\n");
   return RETURN_EXIT;
 }
@@ -394,8 +388,8 @@ return_type opt__usage(
 return_type opt__version(
     __attribute__((unused)) wsctx_parameters_t *p,
     __attribute__((unused)) const char *arg) {
-  print_version("ws");
-  print_copyright();
+  // LANG_WS__COPYRIHT
+  printf("%s - " WS_VERSION "\n" LANG_WS__COPYRIHT "\n", p->exec_name);
   return RETURN_EXIT;
 }
 
