@@ -51,6 +51,7 @@
   printf(MAKE_CATEGORY(_category)); \
   _print_section_man(OPT_CATEGORY_ ## _category, (_column_count))
 
+#define WS_AUTHOR_NAMES "A. MASSIAS & K.KLAK"
 #define WS_VERSION "2022/01/10"
 #define LOCAL_DIRECTORY_PREFIX "./"
 #define DEFULT_MAX_TEXT_WIDTH 80
@@ -337,6 +338,12 @@ return_type opt__man(wsctx_parameters_t *p,
   printf("%*c", indent, ' ');
   _print_description(ws.ws_col, indent, offset, LANG_WS__LIMITS,
       LANG_OPT__PARAMETER_FILES);
+  putchar('\n');
+  //
+  printf(MAKE_SECTION(AUTHORS));
+  printf("%*c", indent, ' ');
+  print_description(ws.ws_col, indent, offset, LANG_WS__AUTHORS);
+  putchar('\n');
   return RETURN_EXIT;
 }
 

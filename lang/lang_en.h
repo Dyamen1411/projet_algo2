@@ -80,6 +80,7 @@
 #define LANG_MANN_SECTION__DESCRIPTION "DESCRIPTION"
 #define LANG_MANN_SECTION__OPTIONS "OPTIONS"
 #define LANG_MANN_SECTION__LIMITS "LIMITS"
+#define LANG_MANN_SECTION__AUTHORS "AUTHORS"
 
 //==============================================================================
 
@@ -126,6 +127,4 @@
 #define LANG_WS__COPYRIHT "This is freeware: you can redistribute it. There " \
   "is NO WARRANTY."
 
-#define LANG_WS__AUTHOR_WRITTEN "Written by"
-
-#define LANG_WS__AUTHOR_NAME "A. MASSIAS & K.KLAK"
+#define LANG_WS__AUTHORS "Written by " WS_AUTHOR_NAMES "."
