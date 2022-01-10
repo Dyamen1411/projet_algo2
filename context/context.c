@@ -107,12 +107,24 @@ static bool is_space(int c, bool punctuation_like_spaces);
 static int word_compar_file_appearances(const word_t **word1,
     const word_t **word2);
 
+//  word_compar_pattern : compare le motif de la chaîne de caractères
+//    pointée par word1 à celui de la chaîne de caractères pointée par
+//    word2.
 static int word_compar_pattern(const word_t **word1, const word_t **word2);
+
+//  word_compar_count : compare le nombre total d'occurrence associé à
+//    la chaîne de caractères pointée par word1 à celui de la chaine de
+//    caractères pointée par word2.
 static int word_compar_count(const word_t **word1, const word_t **word2);
+
+//  word_compar_word : compare les deux chaines de caractères pointées
+//    respectivement par word1 et word2.
 static int word_compar_word(const word_t **word1, const word_t **word2);
 
-//  TODO: comment min__size_t & print_word
+//  min_size_t : renvoie le minimum des tailles a et b
 static size_t min__size_t(size_t a, size_t b);
+
+//  print_word
 static void print_word(wsctx_t *ctx, word_t *word);
 
 //  r_free : libere les ressources allouees a ptr et renvoie 0.
@@ -157,8 +169,8 @@ wsctx_t *wsctx_initialize(const wsctx_parameters_t *parameters,
     goto error;
   }
   ctx->table = hashtable_empty(
-      (int (*) (const void *, const void *)) strcmp,
-      (size_t (*) (const void *)) strhash);
+      (int (*)(const void *, const void *))strcmp,
+      (size_t (*)(const void *))strhash);
   if (ctx->table == NULL) {
     goto error;
   }
@@ -240,7 +252,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
   // Sort by lexical reverse order
   pattern_size = ctx->files.pattern_size;
   qsort(ctx->words.list, ctx->words.count, sizeof(word_t *),
-      (int (*) (const void *, const void *)) word_compar_pattern);
+      (int (*)(const void *, const void *))word_compar_pattern);
   word_t **base = ctx->words.list;
   size_t count = 1;
   word_t *previous = ctx->words.list[0];
@@ -248,7 +260,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
     if (word_compar_pattern((const word_t **) &previous,
         (const word_t **) &ctx->words.list[i]) != 0) {
       qsort(base, count, sizeof(word_t *),
-          (int (*) (const void *, const void *)) word_compar_count);
+          (int (*)(const void *, const void *))word_compar_count);
       base += count;
       previous = ctx->words.list[i];
       count = 1;
@@ -257,7 +269,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
     ++count;
   }
   qsort(base, count, sizeof(word_t *),
-      (int (*) (const void *, const void *)) word_compar_count);
+      (int (*)(const void *, const void *))word_compar_count);
   base = ctx->words.list;
   count = 1;
   previous = ctx->words.list[0];
@@ -267,7 +279,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
         || word_compar_count((const word_t **) &previous,
         (const word_t **) &ctx->words.list[i]) != 0) {
       qsort(base, count, sizeof(word_t *),
-          (int (*) (const void *, const void *)) word_compar_word);
+          (int (*)(const void *, const void *))word_compar_word);
       base += count;
       previous = ctx->words.list[i];
       count = 1;
@@ -276,7 +288,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
     ++count;
   }
   qsort(base, count, sizeof(word_t *),
-      (int (*) (const void *, const void *)) word_compar_word);
+      (int (*)(const void *, const void *))word_compar_word);
 }
 
 void wsctx_output_data(wsctx_t *ctx) {
@@ -310,7 +322,7 @@ void wsctx_dispose(wsctx_t **ctx) {
     return;
   }
   holdall_apply((*ctx)->dictionary, r_free);
-  holdall_apply((*ctx)->words.h, (int (*) (void *)) r_free_word);
+  holdall_apply((*ctx)->words.h, (int (*)(void *))r_free_word);
   holdall_dispose(&(*ctx)->dictionary);
   holdall_dispose(&(*ctx)->words.h);
   hashtable_dispose(&(*ctx)->table);
@@ -618,8 +630,8 @@ size_t min__size_t(size_t a, size_t b) {
 void print_word(wsctx_t *ctx, word_t *word) {
   for (size_t i = 0; i < ctx->files.count; ++i) {
     printf("%c",
-        ((word->pattern[(i / BITS_IN_BYTE)] >>
-        (i % BITS_IN_BYTE)) & 1) ? 'x' : '-');
+        ((word->pattern[(i / BITS_IN_BYTE)]
+        >> (i % BITS_IN_BYTE)) & 1) ? 'x' : '-');
   }
   printf("\t%zu\t%s\n", word->count, word->word);
 }
