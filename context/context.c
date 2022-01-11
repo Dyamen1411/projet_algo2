@@ -104,6 +104,9 @@ static int fclose_stdin(__attribute__((unused)) FILE *stream);
 //  is_space : indique si le charactere c est considere comme un espace ou non.
 static bool is_space(int c, bool punctuation_like_spaces);
 
+static size_t word_file_occurence_count(const word_t *word,
+    size_t pattern_size);
+
 static int word_compar_file_appearances(const word_t **word1,
     const word_t **word2);
 
@@ -296,17 +299,25 @@ void wsctx_output_data(wsctx_t *ctx) {
       ? ctx->words.count
       : min__size_t(ctx->words.count, ctx->parameters.top);
   for (size_t i = 0; i < limit; ++i) {
-    print_word(ctx, ctx->words.list[ctx->words.count - i - 1]);
+    word_t *word = ctx->words.list[ctx->words.count - i - 1];
+    if (word_file_occurence_count(word, ctx->files.pattern_size) < 2) {
+      return;
+    }
+    print_word(ctx, word);
   }
   if (!ctx->parameters.same_number || ctx->parameters.top == 0) {
     return;
   }
-  word_t *model = ctx->words.list[ctx->words.count - limit];
+  word_t *model = ctx->words.list[ctx->words.count - limit - 1];
   for (size_t i = limit; i < ctx->words.count; ++i) {
+    word_t *word = ctx->words.list[ctx->words.count - i - 1];
+    if (word_file_occurence_count(word, ctx->files.pattern_size) < 2) {
+      return;
+    }
     if (word_compar_file_appearances((const word_t **) &model,
-        (const word_t **) &ctx->words.list[ctx->words.count - i - 1]) != 0
+        (const word_t **) word) != 0
         || word_compar_count((const word_t **) &model,
-        (const word_t **) &ctx->words.list[ctx->words.count - i - 1]) != 0) {
+        (const word_t **) word) != 0) {
       break;
     }
     print_word(ctx, ctx->words.list[ctx->words.count - i - 1]);
@@ -589,16 +600,23 @@ bool is_space(int c, bool punctuation_like_spaces) {
   return isspace(c) || (punctuation_like_spaces && ispunct(c));
 }
 
-int word_compar_file_appearances(const word_t **word1, const word_t **word2) {
-  size_t pattern_size_1 = 0;
-  size_t pattern_size_2 = 0;
+size_t word_file_occurence_count(const word_t *word, size_t pattern_size) {
+  size_t file_occurence_count = 0;
   for (size_t i = 0; i < pattern_size; ++i) {
     for (size_t j = 0; j < BITS_IN_BYTE; ++j) {
-      pattern_size_1 += ((*word1)->pattern[i] >> j) & 1;
-      pattern_size_2 += ((*word2)->pattern[i] >> j) & 1;
+      file_occurence_count += (word->pattern[i] >> j) & 1;
     }
   }
-  return (pattern_size_1 > pattern_size_2) - (pattern_size_1 < pattern_size_2);
+  return file_occurence_count;
+}
+
+int word_compar_file_appearances(const word_t **word1, const word_t **word2) {
+  const int occurence_count_1
+    = (int) word_file_occurence_count(*word1, pattern_size);
+  const int occurence_count_2
+    = (int) word_file_occurence_count(*word2, pattern_size);
+  return (occurence_count_1 > occurence_count_2)
+         - (occurence_count_1 < occurence_count_2);
 }
 
 int word_compar_pattern(const word_t **word1, const word_t **word2) {
