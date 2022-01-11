@@ -16,7 +16,8 @@ CFLAGS = -std=c18 \
   -I$(linked_list_dir) \
   -I$(context_dir) \
   -I$(opt_dir) \
-  -I$(lang_dir)
+  -I$(lang_dir) \
+  -DLANG=FR
 
 LDFLAGS =
 
