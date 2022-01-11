@@ -155,12 +155,18 @@ enregistré, et ouvert. Il y a lecture de ce dernier, et tous les mots vérifian
 Nous avons utilisé plusieurs types de structures de données dans le but d'utiliser 
 au mieux certaines de nos fonctions.
 
+Nous avons notamment utilisé les tables de hachage, afin de gérer notre mot et les caractéristiques qui lui sont 
+affiliées; c'est-à-dire le mot en lui-même (chaine de caractères), le nombre d'occurences et le motif. 
+Nous avons donc une table pour nos mots. Cela permet de gérer au mieux notre temps, et la logique 
+de l'algorithme.
+
+Une autre structure intéressante utilisée : les listes chaïnées. Leur utilisation est bénéfique pour les fichiers, 
+garder leur nom en mémoire, après une saisie de l'utilisateur. 
 
 
 \chapter{Le descriptif}
 
-Dans ce chapitre, les différents modules seront expliqués. Egalement, nousdécrirons quelques fonctions
-qui nous paraissent importantes à préciser ici.
+Dans ce chapitre, les différents modules seront expliqués, et leur but sera fondé.
 
 \section{Les modules}
 Il y a eu utilisation de plusieurs modules, dont l'idée de développement est parfois survenue
@@ -173,17 +179,28 @@ aux autres modules.
 
 Le \emph{context} est un sorte de moyen de stockage de toutes les variables, dans un seul
 et même endroit donc.
+Ce context offre une oportunité de ne paas avoir à passer des apramètres dont on pourrait
+se passer, lorsque l'on gère des données, mais à n'avoir qu'à passer le context. 
+D'un point de vue logique, il est donc beaucoup plus simple de s'y retrouver
+donc et éventuellement penser à des optimisations.
 
-context stockerttes variables a un seul endroit
+Bien que les gestions fondamentales, se passent dans le \emph{main}, c'est dans le context 
+qu'il y a tout le processing, toute cette gestion. Ainsi, en l'incluant dans le context,
+on permet de cacher la machinerie, de découper le code à notre aise, et le rendre bien plus lisible
+et clair.
 
-qd om  gere donnees
-au lieu de paasser dixmlles paarametres on passe juste context
-pt de vue logiq trucs fondamentaux ds Néanmoins
+Opt est également dans le lot. Ce module permet la egstion des différentes options et des messages d'erreurs et d'avertissement si besoin
+est. De même, une telle découpe permet un code plus clair et surtou une meilleure gestion s'en concluant.
 
-processing de maniere xache dans context cacher nachinerie
+Un autre module intéressant : le linked list. On reprend ici un simple principe de liste chaïnée, que l'on a étudié et on en
+crée un module pour l'utiliser à notre aise dansle projet. C'est ce module qui nous permet de garder
+les fichiers en mémoire, les gérer, par le biais de liste donc chaïnée.
 
-decouper code, clean
-\section{les fonctions}
+Enfin, lang, un module permettant plusieurs idées que l'on affectionne.
+En effet, on peut grâce à celui-ci de choisir la langue des différents messages qui s'affichent en sortie,
+anglas, français... Le tout étant donc une amélioration du projet, pour agrandir la visée.
+Par ailleurs, on y stocke donc les messages, afin de créer un code clair, lisible, et aéré.
+
 
 \chapter{Les limites}
 Nous approcherons la question des différentes contraintes 
