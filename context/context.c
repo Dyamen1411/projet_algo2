@@ -169,8 +169,8 @@ wsctx_t *wsctx_initialize(const wsctx_parameters_t *parameters,
     goto error;
   }
   ctx->table = hashtable_empty(
-      (int (*)(const void *, const void *))strcmp,
-      (size_t (*)(const void *))strhash);
+      (int (*) (const void *, const void *)) strcmp,
+      (size_t (*) (const void *)) strhash);
   if (ctx->table == NULL) {
     goto error;
   }
@@ -252,7 +252,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
   // Sort by lexical reverse order
   pattern_size = ctx->files.pattern_size;
   qsort(ctx->words.list, ctx->words.count, sizeof(word_t *),
-      (int (*)(const void *, const void *))word_compar_pattern);
+      (int (*) (const void *, const void *)) word_compar_pattern);
   word_t **base = ctx->words.list;
   size_t count = 1;
   word_t *previous = ctx->words.list[0];
@@ -260,7 +260,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
     if (word_compar_pattern((const word_t **) &previous,
         (const word_t **) &ctx->words.list[i]) != 0) {
       qsort(base, count, sizeof(word_t *),
-          (int (*)(const void *, const void *))word_compar_count);
+          (int (*) (const void *, const void *)) word_compar_count);
       base += count;
       previous = ctx->words.list[i];
       count = 1;
@@ -269,7 +269,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
     ++count;
   }
   qsort(base, count, sizeof(word_t *),
-      (int (*)(const void *, const void *))word_compar_count);
+      (int (*) (const void *, const void *)) word_compar_count);
   base = ctx->words.list;
   count = 1;
   previous = ctx->words.list[0];
@@ -279,7 +279,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
         || word_compar_count((const word_t **) &previous,
         (const word_t **) &ctx->words.list[i]) != 0) {
       qsort(base, count, sizeof(word_t *),
-          (int (*)(const void *, const void *))word_compar_word);
+          (int (*) (const void *, const void *)) word_compar_word);
       base += count;
       previous = ctx->words.list[i];
       count = 1;
@@ -288,7 +288,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
     ++count;
   }
   qsort(base, count, sizeof(word_t *),
-      (int (*)(const void *, const void *))word_compar_word);
+      (int (*) (const void *, const void *)) word_compar_word);
 }
 
 void wsctx_output_data(wsctx_t *ctx) {
@@ -322,7 +322,7 @@ void wsctx_dispose(wsctx_t **ctx) {
     return;
   }
   holdall_apply((*ctx)->dictionary, r_free);
-  holdall_apply((*ctx)->words.h, (int (*)(void *))r_free_word);
+  holdall_apply((*ctx)->words.h, (int (*) (void *)) r_free_word);
   holdall_dispose(&(*ctx)->dictionary);
   holdall_dispose(&(*ctx)->words.h);
   hashtable_dispose(&(*ctx)->table);
@@ -390,17 +390,14 @@ return_type wsctx_parse_next_file(wsctx_t *ctx) {
     if (ctx->parameters.initial != 0
         && word_length >= ctx->parameters.initial) {
       word_buffer[ctx->parameters.initial] = '\0';
-      fprintf(stderr, "%s: " LANG_MESSAGE_WARNING_WORD_SPLICING__WORD_FROM " ",
-          ctx->parameters.exec_name);
+      fprintf(stderr, "%s: ", ctx->parameters.exec_name);
       if (*file_name == '\0') {
-        fprintf(stderr, LANG_MESSAGE_WARNING_WORD_SPLICING__STDIN);
+        fprintf(stderr, LANG_MESSAGE_WARNING_WORD_SPLICING__STDIN, line_number);
       } else {
-        fprintf(stderr, "'%s'", file_name);
+        fprintf(stderr, LANG_MESSAGE_WARNING_WORD_SPLICING__FILE, file_name,
+            line_number);
       }
-      fprintf(stderr,
-          " " LANG_MESSAGE_WARNING_WORD_SPLICING__AT_LINE " %zu "
-          LANG_MESSAGE_WARNING_WORD_SPLICING__CUT ": '%s...'.\n", line_number,
-          word_buffer);
+      fprintf(stderr, ": '%s...'.\n", word_buffer);
     }
     // adding word to context
     word_t *word = wsctx_add_word(ctx, word_buffer);
