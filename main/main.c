@@ -247,13 +247,7 @@ return_type parse_arguments(int argc, char **argv,
 }
 
 return_type opt__initial(wsctx_parameters_t *p, const char *arg) {
-  if (*arg == '\0') {
-    return RETURN_ERROR_OPT_ARGUMENT;
-  }
   size_t n = 0;
-  if (*arg == '-') {
-    return RETURN_ERROR_OPT_ARGUMENT;
-  }
   while (isdigit(*arg) && *arg != '\0') {
     n *= 10;
     n += (size_t) (*arg - '0');
