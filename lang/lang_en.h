@@ -101,7 +101,7 @@
   "word. The content of a line consists of three fields: the pattern with " \
   "'x's or '-' depending on wether the word appears in the " \
   LANG_OPT__PARAMETER_FILES " or not; the total number of occurrences; the " \
-  "word.The tab character is used as field separator.\n\nRead the standard " \
+  "word. The tab character is used as field separator.\n\nRead the standard " \
   "input for any of the " LANG_OPT__PARAMETER_FILES " which is \"-\"."
 
 #define LANG_WS__LIMITS "The number of " LANG_OPT__PARAMETER_FILES " that " \
