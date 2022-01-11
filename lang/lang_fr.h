@@ -93,24 +93,26 @@
 
 //  TODO@Dyamen1411@KarolinaK25:
 //    translate
-#define LANG_WS__LONG_DESCRIPTION "prints a list of words that appear in " \
-  "several text " LANG_OPT__PARAMETER_FILES ". Each of the words listed is " \
-  "accompanied by a pattern indicating in which " LANG_OPT__PARAMETER_FILES \
-  " it appears and the total number of its occurrences in the " \
-  LANG_OPT__PARAMETER_FILES ".\n\nA word is, by default, a maximum length " \
-  "sequence of characters that do not belong to the space class. A word is " \
-  "shared when it appears in at least two " LANG_OPT__PARAMETER_FILES ". " \
-  "Only shared words are listed. The printed list is sorted in descending " \
-  "order of the number of " LANG_OPT__PARAMETER_FILES " in which the words " \
-  "appear, primary key, in descending order of the total number of " \
-  "occurrences, secondary key, and in ascending lexicographical order of " \
-  "words, tertiary key. The word comparison is understood in the sense of " \
-  "the standard function strcmp. One line of text is produced per shared " \
-  "word. The content of a line consists of three fields: the pattern with " \
-  "'x's or '-' depending on wether the word appears in the " \
-  LANG_OPT__PARAMETER_FILES " or not; the total number of occurrences; the " \
-  "word.The tab character is used as field separator.\n\nRead the standard " \
-  "input for any of the " LANG_OPT__PARAMETER_FILES " which is \"-\"."
+#define LANG_WS__LONG_DESCRIPTION "affiche une liste de mots qui " \
+  "apparaissent dans plusieurs " LANG_OPT__PARAMETER_FILES " textes. Chacun " \
+  "des mots listes est acompagne par un motif indiquant dans quel " \
+  LANG_OPT__PARAMETER_FILES " il apparait et par le nombre total " \
+  "d'occurences dans les " LANG_OPT__PARAMETER_FILES ".\n\nUn mot est, par " \
+  "defaut, une chaine de caractere de taille maximale qui ne contiens pas " \
+  "de caracteres d'espacement. Un mot est dit partage quand il apparait au " \
+  "moins deux fois dans les " LANG_OPT__PARAMETER_FILES ". Seulement les " \
+  "mots partages sont listes. L'affichage de la liste des mots partages est " \
+  "triee par ordre decroissant du nombre de " LANG_OPT__PARAMETER_FILES " " \
+  "dans lequels les mots apparaissent, cle primaire, dans l'ordre " \
+  "decroissant du nombre total d'occurences, cle secondaire, et dans " \
+  "l'ordre lexicographique des mots, cle ternaire. La comparaison de mot " \
+  "s'entend au sens de la fonction standard strcmp. Une ligne de texte est " \
+  "produite par mot partage. Le contenu d'une ligne consiste en trois " \
+  "champs: le motif avec 'x' ou '-' si le mot apparait dans les " \
+  LANG_OPT__PARAMETER_FILES "ou pas; le nombre total d'occurences; le mot." \
+  "La tabulation est utilise comme caractere d'espacement entre les " \
+  "different champs.\n\nLis l'entree standard pour chacun des " \
+  LANG_OPT__PARAMETER_FILES " qui sont \"-\""
 
 #define LANG_WS__LIMITS "Le nombre de " LANG_OPT__PARAMETER_FILES " qui " \
   "doivent etre passes doit etre au moins 2. les conteurs des nombres totaux " \
