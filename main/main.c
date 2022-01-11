@@ -149,8 +149,10 @@ int main(int argc, char **argv) {
   }
   // context parameters initialization
   {
-    parameters.exec_name
-      = argv[0] + (strncmp(argv[0], LOCAL_DIRECTORY_PREFIX, 2) == 0 ? 2 : 0);
+    parameters.exec_name = argv[0]
+        + (strncmp(argv[0], LOCAL_DIRECTORY_PREFIX, 2) == 0
+        ? sizeof(LOCAL_DIRECTORY_PREFIX)
+        : 0);
     int last_index;
     wsctx_parameters_default_initialization(&parameters);
     switch (parse_arguments(argc, argv, &parameters, files, &last_index)) {
@@ -161,8 +163,7 @@ int main(int argc, char **argv) {
             argv[0], argv[last_index]);
         goto error;
       case RETURN_ERROR_OPT_MISSING_ARG:
-        fprintf(stderr,
-            "%s: " LANG_MESSAGE_ERROR__MISSING_ARGUMENT " '%s'.\n",
+        fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__MISSING_ARGUMENT " '%s'.\n",
             argv[0], argv[last_index]);
         goto error;
       case RETURN_ERROR_CAPACITY:

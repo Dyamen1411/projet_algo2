@@ -76,17 +76,17 @@ static return_type parse_short_opt(const int argc, char **argv,
 return_type parse_opt(const int argc, char **argv, int *arg_pos,
     wsctx_parameters_t *parameters, linked_list_t *files,
     const opt_t *opts, const size_t opt_count) {
-  if (IS_LONG_OPT(argv[*arg_pos])) {
-    return parse_long_opt(argc, argv, arg_pos, parameters, opts, opt_count);
+  bool is_stdin = IS_STDIN(argv[*arg_pos]);
+  const char *file_name = is_stdin ? "" : argv[*arg_pos];
+  if (!is_stdin) {
+    if (IS_LONG_OPT(file_name)) {
+      return parse_long_opt(argc, argv, arg_pos, parameters, opts, opt_count);
+    }
+    if (IS_SHORT_OPT(file_name)) {
+      return parse_short_opt(argc, argv, arg_pos, parameters, opts, opt_count);
+    }
   }
-  if (IS_SHORT_OPT(argv[*arg_pos])) {
-    return IS_STDIN(argv[*arg_pos] + 1)
-           ? linked_list_add_tail(files, argv[*arg_pos] + 1) == NULL
-           ? RETURN_ERROR_CAPACITY
-           : RETURN_NONE
-           : parse_short_opt(argc, argv, arg_pos, parameters, opts, opt_count);
-  }
-  return linked_list_add_tail(files, argv[*arg_pos]) == NULL
+  return linked_list_add_tail(files, file_name) == NULL
          ? RETURN_ERROR_CAPACITY
          : RETURN_NONE;
 }

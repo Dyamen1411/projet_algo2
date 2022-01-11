@@ -18,10 +18,10 @@
 //==============================================================================
 
 //  Splicing word
-#define LANG_MESSAGE_WARNING_WORD_SPLICING__WORD_FROM "Word from"
-#define LANG_MESSAGE_WARNING_WORD_SPLICING__STDIN "standard input"
-#define LANG_MESSAGE_WARNING_WORD_SPLICING__AT_LINE "at line"
-#define LANG_MESSAGE_WARNING_WORD_SPLICING__CUT "cut"
+#define LANG_MESSAGE_WARNING_WORD_SPLICING__FILE "Word from '%s' at line %zu " \
+  "cut"
+#define LANG_MESSAGE_WARNING_WORD_SPLICING__STDIN "Word from standard input " \
+  "at line %zu cut"
 
 //==============================================================================
 //= Options
