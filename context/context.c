@@ -54,14 +54,6 @@ typedef int (*getc_fun)(FILE *);
 //  Prototypes
 //==============================================================================
 
-//  TODO@Dyamen1411 TODO@KarolinaK25 :
-//    Add comment to explain following functions :
-//      [-] getc_stream
-//      [-] getc_stdin
-//      [-] fclose_stream
-//      [-] fclose_stdin
-//      [-] word_compar_file_appearances
-
 //  wsctx_parse_next_file : lit et stocke les mots contenus dans un fichier
 //    en lecture, en prenant compte des options, et les place dans un buffer.
 //    Vérifie si le mot a été coupé, si c'est le cas, il y a message d'erreur,
@@ -159,6 +151,8 @@ static size_t pattern_size;
 //  Fonctions de context.h
 //==============================================================================
 
+//  wsctx_parameters_default_initialization : attribue à chaque option
+//    une valeur par défaut
 void wsctx_parameters_default_initialization(
     wsctx_parameters_t *parameters) {
   parameters->initial = WS_CTX_DEFAULT_OPTION_VALUE__INITIAL;
@@ -169,6 +163,8 @@ void wsctx_parameters_default_initialization(
   parameters->uppercasing = WS_CTX_DEFAULT_OPTION_VALUE__UPPERCASING;
 }
 
+// TODO to complete
+//  wsctx_initialize : initialise les paramètres
 wsctx_t *wsctx_initialize(const wsctx_parameters_t *parameters,
     const char **file_names, size_t file_count) {
   wsctx_t *ctx = (wsctx_t *) malloc(sizeof(wsctx_t));
@@ -186,8 +182,8 @@ wsctx_t *wsctx_initialize(const wsctx_parameters_t *parameters,
     goto error;
   }
   ctx->table = hashtable_empty(
-      (int (*) (const void *, const void *)) strcmp,
-      (size_t (*) (const void *)) strhash);
+      (int (*)(const void *, const void *))strcmp,
+      (size_t (*)(const void *))strhash);
   if (ctx->table == NULL) {
     goto error;
   }
@@ -248,6 +244,9 @@ error:
   return NULL;
 }
 
+//TODO : to complete
+//  wsctx_parse_filesp :permet de parse tous les fichiers, rentrés dans la
+//    ligne de commande.
 return_type wsctx_parse_files(wsctx_t *ctx) {
   return_type res;
   for (size_t i = 0; i < ctx->files.count; ++i) {
@@ -263,13 +262,15 @@ return_type wsctx_parse_files(wsctx_t *ctx) {
          : RETURN_NONE;
 }
 
+// TODO
+//  wsctx_sort_data :
 void wsctx_sort_data(wsctx_t *ctx) {
   // Sort by pattern
   // Sort by count
   // Sort by lexical reverse order
   pattern_size = ctx->files.pattern_size;
   qsort(ctx->words.list, ctx->words.count, sizeof(word_t *),
-      (int (*) (const void *, const void *)) word_compar_pattern);
+      (int (*)(const void *, const void *))word_compar_pattern);
   word_t **base = ctx->words.list;
   size_t count = 1;
   word_t *previous = ctx->words.list[0];
@@ -277,7 +278,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
     if (word_compar_pattern((const word_t **) &previous,
         (const word_t **) &ctx->words.list[i]) != 0) {
       qsort(base, count, sizeof(word_t *),
-          (int (*) (const void *, const void *)) word_compar_count);
+          (int (*)(const void *, const void *))word_compar_count);
       base += count;
       previous = ctx->words.list[i];
       count = 1;
@@ -286,7 +287,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
     ++count;
   }
   qsort(base, count, sizeof(word_t *),
-      (int (*) (const void *, const void *)) word_compar_count);
+      (int (*)(const void *, const void *))word_compar_count);
   base = ctx->words.list;
   count = 1;
   previous = ctx->words.list[0];
@@ -296,7 +297,7 @@ void wsctx_sort_data(wsctx_t *ctx) {
         || word_compar_count((const word_t **) &previous,
         (const word_t **) &ctx->words.list[i]) != 0) {
       qsort(base, count, sizeof(word_t *),
-          (int (*) (const void *, const void *)) word_compar_word);
+          (int (*)(const void *, const void *))word_compar_word);
       base += count;
       previous = ctx->words.list[i];
       count = 1;
@@ -305,9 +306,11 @@ void wsctx_sort_data(wsctx_t *ctx) {
     ++count;
   }
   qsort(base, count, sizeof(word_t *),
-      (int (*) (const void *, const void *)) word_compar_word);
+      (int (*)(const void *, const void *))word_compar_word);
 }
 
+//  TODO
+//  wsctx_output_data :
 void wsctx_output_data(wsctx_t *ctx) {
   const size_t limit = ctx->parameters.top == 0
       ? ctx->words.count
@@ -330,16 +333,20 @@ void wsctx_output_data(wsctx_t *ctx) {
   }
 }
 
+//  wsctx_get_error_message : renvoie le message d'erreur
+//    pour un éément donné du context.
 const char *wsctx_get_error_message(wsctx_t *ctx) {
   return ctx->error_message;
 }
 
+//  wsctx_dispose : libère l'espace mémoire occupé les éléments du
+//    context
 void wsctx_dispose(wsctx_t **ctx) {
   if (*ctx == NULL) {
     return;
   }
   holdall_apply((*ctx)->dictionary, r_free);
-  holdall_apply((*ctx)->words.h, (int (*) (void *)) r_free_word);
+  holdall_apply((*ctx)->words.h, (int (*)(void *))r_free_word);
   holdall_dispose(&(*ctx)->dictionary);
   holdall_dispose(&(*ctx)->words.h);
   hashtable_dispose(&(*ctx)->table);
