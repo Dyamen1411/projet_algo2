@@ -120,28 +120,103 @@ l'utilisation des 5 options.} }
 \chapter{L'algorithme}
 Dans ce chapitre, nous exprimerons l'algorithme général
  et son fonctionnement. 
-\section{Général}
 
-Notre projet se base sur le module hashtable, présenté et travaillé 
-en cours et en TP lors de ce semestre, auquel il était interdit
- d'apporter des modifications.
- Des modules supplémentaires ont été développés.
+\section{Général}
+Notre projet se base sur le module hashtable
+présentée t travaillé en cours et en tp,
+lors de ce semestre, auquel il était interdit d'apporter
+des modifications.
+Des modules supplémentaires ont été développés : lang context et linked list.
+Ces modules seront présentés dans une section prochaine.
+
+Prenons deux points de vue. D'un point de vue utilisateur, ce dernier écrit en ligne de commande dans le bash, en faisant attention d'y inclure
+l'exécutble, les options s'il le veut, ainsi que les fichiers textes.
+Il en résulte une liste, à ligne à 3
+éléments, dans laquelle on peut remarquer des mots figurant dans les fichiers
+, triés selon les 3 conditions expliquées dans la \emph{section options.}.
+L'utilisateur peut également choisir d'écrire sa propre suite de mots en 
+entrée standard.
+
+Le point de vue développeur est quant à lui plus intéressant
+à développer. 
+
+En effet, derrière cet algorithme, se trouvel'usage de plusieurs structures de données, chacune ayant son interèt, de modules, étudiés ou non en cours.
+Lorsque l'utlisateur inscrit sa ligne de co;;ande, une fonction la 'parse', et vérifie
+chaque caractère, s'il y en a, de la ligne, pour en tirer la fonction, savoir de quelle potentielle option il peut s'agir, en triant d'avance
+selon option longue courte, fichier. 
+Ces caractères ou suite de caractères selon les cas, sont stockés.
+Lorsqu'un nom de fichier est détecté, celui-ci est immédiatement
+enregistré, et ouvert. Il y a lecture de ce dernier, et tous les mots vérifiant les conditions (en fonction des optios données), sont stockés.
+
+
 
 \section{Structure de données}
 
-\section{Illustration}
+Nous avons utilisé plusieurs types de structures de données dans le but d'utiliser 
+au mieux certaines de nos fonctions.
+
+
 
 \chapter{Le descriptif}
 
-\section{Les modules}
+Dans ce chapitre, les différents modules seront expliqués. Egalement, nousdécrirons quelques fonctions
+qui nous paraissent importantes à préciser ici.
 
+\section{Les modules}
+Il y a eu utilisation de plusieurs modules, dont l'idée de développement est parfois survenue
+en plein projet, suite à une volonté d'améliorer ce dernier
+
+Dans un premier temps, vous remarquerez l'utlisation des modules hashtable et holdall,
+modules travaillés en cours qui permettent une gestion très performante des mots, grâce
+à la table de hachage et la fonction. Cela ayant déjà été travaillé, intéressons-nous 
+aux autres modules.
+
+Le \emph{context} est un sorte de moyen de stockage de toutes les variables, dans un seul
+et même endroit donc.
+
+context stockerttes variables a un seul endroit
+
+qd om  gere donnees
+au lieu de paasser dixmlles paarametres on passe juste context
+pt de vue logiq trucs fondamentaux ds Néanmoins
+
+processing de maniere xache dans context cacher nachinerie
+
+decouper code, clean
 \section{les fonctions}
 
 \chapter{Les limites}
+Nous approcherons la question des différentes contraintes 
+auxquelles on a fait face, ainsi que les problèmes que l'on a pu rencontrer.
 
 \section{Contraintes/limites}
+Nous avons rencontré une limite, si telle est-elle. Il s'agit de la gestion 
+de lecture de mots en entrée standard. 
+
+Par ailleurs, on ne recense pas d'autre contrainte à l'heure actuelle.
+Nous avons réussi à nous organiser, et permettre on codage soutenu,
+grâce à l'utilisation de GIT, ce qui nous permettait de partager et mettre à jour quasi instantanément nos avancées respectives sans 
+créer de problémes, de retards chez l'autre.
+
+
 
 \section{Les problèmes rencontrés}
+
+A ce jour, on recense deux problèmes assez conséquents : l'optimisation et la lecture desmots sur l'entrée standard
+au lieu de les lire sur fichier.
+En effet, ainsi le projet ne remplit pas toutes les conditions requises pour qu'il soit complet. 
+Néanmoins nous nous sommes concentrés sur la gestion de l'espace, et tout optimisation possible
+afin de vous délivrer un code des plus propres et lisibles que l'on puisse faire 
+en ce temps imparti.
+
+
+Par ailleurs, lorsque l'on compare les espaces utilisés avec l'exécutable de référence, 
+on s'aperçoit qu'il y a un facteur 4. 
+
+C'est un cas que nous jugeons important car nous portons un 
+intérèt majeur quant aux différentes améliorations que nous pourrions
+apporter au projet.
+
 
 
 \end{document}

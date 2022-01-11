@@ -54,17 +54,11 @@ typedef int (*getc_fun)(FILE *);
 //  Prototypes
 //==============================================================================
 
-//  TODO@Dyamen1411 TODO@KarolinaK25 :
-//    Add comment to explain following functions :
-//      [-] wsctx_parse_next_file
-//      [-] getc_stream
-//      [-] getc_stdin
-//      [-] fclose_stream
-//      [-] fclose_stdin
-//      [-] word_compar_file_appearances
-//      [-] word_compar_pattern
-//      [-] word_compar_count
-//      [-] word_compar_word
+//  wsctx_parse_next_file : lit et stocke les mots contenus dans un fichier
+//    en lecture, en prenant compte des options, et les place dans un buffer.
+//    Vérifie si le mot a été coupé, si c'est le cas, il y a message d'erreur,
+//    sion ne change rien.
+
 static return_type wsctx_parse_next_file(wsctx_t *ctx);
 
 //  skip_spaces : passe tous les characteres consideres comme un espace dans le
@@ -96,9 +90,21 @@ static void wsctx_prepare_next_file(wsctx_t *ctx);
 //  strhash : renvoie un hash de la chaine de caractere pointee par s.
 static size_t strhash(const char *s);
 
+//  getc_stream : renvoie le caractère à la position courante du flux.
+//    Après lecture dudit caractère, par le biais de la fonction fgetc(), la
+//    lecture associée au flux passe au caractère suivant.
 static int getc_stream(FILE *stream);
+
+//  getc_stdin : lecture du caractère se trouvant à la position courante
+//    du flux de l'entrée standard
 static int getc_stdin(__attribute__((unused)) FILE *stream);
+
+//  fclose_stream : ferme le flux de caractère pointé par STREAM,
+//    préalablement ouvert.
 static int fclose_stream(FILE *stream);
+
+//  fclose_stdin : renvoie 0. Utilisé en cas de fermeture réalisée de
+//    flux de caractères.
 static int fclose_stdin(__attribute__((unused)) FILE *stream);
 
 //  is_space : indique si le charactere c est considere comme un espace ou non.
@@ -107,6 +113,8 @@ static bool is_space(int c, bool punctuation_like_spaces);
 static size_t word_file_occurence_count(const word_t *word,
     size_t pattern_size);
 
+//  word_compar_file_appearances : compare les motifs de deux mots
+//    passés en paramètres. Coma=pare les apparitions dans les fichiers.
 static int word_compar_file_appearances(const word_t **word1,
     const word_t **word2);
 
@@ -127,7 +135,8 @@ static int word_compar_word(const word_t **word1, const word_t **word2);
 //  min_size_t : renvoie le minimum des tailles a et b
 static size_t min__size_t(size_t a, size_t b);
 
-//  print_word
+//  print_word ; renvoie le motif, le nombre d'occurrence ainsi que la
+//    chaine de caractère prise en compte pour chaque mot.
 static void print_word(wsctx_t *ctx, word_t *word);
 
 //  r_free : libere les ressources allouees a ptr et renvoie 0.
@@ -145,6 +154,8 @@ static size_t pattern_size;
 //  Fonctions de context.h
 //==============================================================================
 
+//  wsctx_parameters_default_initialization : attribue à chaque option
+//    une valeur par défaut
 void wsctx_parameters_default_initialization(
     wsctx_parameters_t *parameters) {
   parameters->initial = WS_CTX_DEFAULT_OPTION_VALUE__INITIAL;
@@ -155,6 +166,8 @@ void wsctx_parameters_default_initialization(
   parameters->uppercasing = WS_CTX_DEFAULT_OPTION_VALUE__UPPERCASING;
 }
 
+// TODO to complete
+//  wsctx_initialize : initialise les paramètres
 wsctx_t *wsctx_initialize(const wsctx_parameters_t *parameters,
     const char **file_names, size_t file_count) {
   wsctx_t *ctx = (wsctx_t *) malloc(sizeof(wsctx_t));
@@ -234,6 +247,8 @@ error:
   return NULL;
 }
 
+//  wsctx_parse_files : permet de traiter tous les fichiers, rentrés dans la
+//    ligne de commande.
 return_type wsctx_parse_files(wsctx_t *ctx) {
   return_type res;
   for (size_t i = 0; i < ctx->files.count; ++i) {
@@ -249,6 +264,8 @@ return_type wsctx_parse_files(wsctx_t *ctx) {
          : RETURN_NONE;
 }
 
+// TODO
+//  wsctx_sort_data :
 void wsctx_sort_data(wsctx_t *ctx) {
   // Sort by pattern
   pattern_size = ctx->files.pattern_size;
@@ -294,6 +311,8 @@ void wsctx_sort_data(wsctx_t *ctx) {
       (int (*) (const void *, const void *)) word_compar_word);
 }
 
+//  TODO
+//  wsctx_output_data :
 void wsctx_output_data(wsctx_t *ctx) {
   const size_t limit = ctx->parameters.top == 0
       ? ctx->words.count
@@ -324,10 +343,14 @@ void wsctx_output_data(wsctx_t *ctx) {
   }
 }
 
+//  wsctx_get_error_message : renvoie le message d'erreur
+//    pour un éément donné du context.
 const char *wsctx_get_error_message(wsctx_t *ctx) {
   return ctx->error_message;
 }
 
+//  wsctx_dispose : libère l'espace mémoire occupé les éléments du
+//    context
 void wsctx_dispose(wsctx_t **ctx) {
   if (*ctx == NULL) {
     return;
