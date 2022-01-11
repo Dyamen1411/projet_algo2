@@ -4,7 +4,7 @@
 
 //  Option processing
 #define LANG_MESSAGE_ERROR__MISSING_ARGUMENT "Missing argument"
-#define LANG_MESSAGE_ERROR__UNKNOWN_OPTION "Unknown option"
+#define LANG_MESSAGE_ERROR__UNKNOWN_OPTION "Unrecognized option"
 
 //  Processing error
 #define LANG_MESSAGE_ERROR__FILE_COUNT "At least 2 files are expected"
@@ -12,6 +12,11 @@
 #define LANG_MESSAGE_ERROR__IO "An error occured while processing file"
 #define LANG_MESSAGE_ERROR__CAPACITY "Not enough memory"
 #define LANG_MESSAGE_ERROR__UNEXPECTED "An unexpected error occured."
+#define LANG_MESSAGE_ERROR__INVALID_PARAMETER "Invalid argument"
+
+//  Information
+#define LANG_MESSAGE_MORE_INFO "Try '" EXEC_NAME_FORMAT " " OPT__LONG  \
+  OPT_NAME_LONG__HELP "' for more information."
 
 //==============================================================================
 //= Warning messages
