@@ -91,8 +91,6 @@
 #define LANG_WS__HOW_TO_USE_OPTIONS "Les arguments exiges par les options " \
   "longues sont exgiges par les options courtes aussi."
 
-//  TODO@Dyamen1411@KarolinaK25:
-//    translate
 #define LANG_WS__LONG_DESCRIPTION "affiche une liste de mots qui " \
   "apparaissent dans plusieurs " LANG_OPT__PARAMETER_FILES " textes. Chacun " \
   "des mots listes est acompagne par un motif indiquant dans quel " \
