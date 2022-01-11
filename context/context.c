@@ -56,15 +56,17 @@ typedef int (*getc_fun)(FILE *);
 
 //  TODO@Dyamen1411 TODO@KarolinaK25 :
 //    Add comment to explain following functions :
-//      [-] wsctx_parse_next_file
 //      [-] getc_stream
 //      [-] getc_stdin
 //      [-] fclose_stream
 //      [-] fclose_stdin
 //      [-] word_compar_file_appearances
-//      [-] word_compar_pattern
-//      [-] word_compar_count
-//      [-] word_compar_word
+
+//  wsctx_parse_next_file : lit et stocke les mots contenus dans un fichier
+//    en lecture, en prenant compte des options, et les place dans un buffer.
+//    Vérifie si le mot a été coupé, si c'est le cas, il y a message d'erreur,
+//    sion ne change rien.
+
 static return_type wsctx_parse_next_file(wsctx_t *ctx);
 
 //  skip_spaces : passe tous les characteres consideres comme un espace dans le
@@ -96,14 +98,28 @@ static void wsctx_prepare_next_file(wsctx_t *ctx);
 //  strhash : renvoie un hash de la chaine de caractere pointee par s.
 static size_t strhash(const char *s);
 
+//  getc_stream : renvoie le caractère à la position courante du flux.
+//    Après lecture dudit caractère, par le biais de la fonction fgetc(), la
+//    lecture associée au flux passe au caractère suivant.
 static int getc_stream(FILE *stream);
+
+//  getc_stdin : lecture du caractère se trouvant à la position courante
+//    du flux de l'entrée standard
 static int getc_stdin(__attribute__((unused)) FILE *stream);
+
+//  fclose_stream : ferme le flux de caractère pointé par STREAM,
+//    préalablement ouvert.
 static int fclose_stream(FILE *stream);
+
+//  fclose_stdin : renvoie 0. Utilisé en cas de fermeture réalisée de
+//    flux de caractères.
 static int fclose_stdin(__attribute__((unused)) FILE *stream);
 
 //  is_space : indique si le charactere c est considere comme un espace ou non.
 static bool is_space(int c, bool punctuation_like_spaces);
 
+//  word_compar_file_appearances : compare les motifs de deux mots
+//    passés en paramètres. Coma=pare les apparitions dans les fichiers.
 static int word_compar_file_appearances(const word_t **word1,
     const word_t **word2);
 
@@ -124,7 +140,8 @@ static int word_compar_word(const word_t **word1, const word_t **word2);
 //  min_size_t : renvoie le minimum des tailles a et b
 static size_t min__size_t(size_t a, size_t b);
 
-//  print_word
+//  print_word ; renvoie le motif, le nombre d'occurrence ainsi que la
+//    chaine de caractère prise en compte pour chaque mot.
 static void print_word(wsctx_t *ctx, word_t *word);
 
 //  r_free : libere les ressources allouees a ptr et renvoie 0.
