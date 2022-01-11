@@ -77,7 +77,7 @@ return_type parse_opt(const int argc, char **argv, int *arg_pos,
     wsctx_parameters_t *parameters, linked_list_t *files,
     const opt_t *opts, const size_t opt_count) {
   bool is_stdin = IS_STDIN(argv[*arg_pos]);
-  const char *file_name = is_stdin ? "" : argv[*arg_pos];
+  const char *file_name = argv[*arg_pos + is_stdin];
   if (!is_stdin) {
     if (IS_LONG_OPT(file_name)) {
       return parse_long_opt(argc, argv, arg_pos, parameters, opts, opt_count);
