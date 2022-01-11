@@ -365,10 +365,10 @@ return_type wsctx_parse_next_file(wsctx_t *ctx) {
     res = skip_spaces(stream, _getc, &line_number,
         ctx->parameters.punctuation_like_spaces);
     if (res != RETURN_NONE) {
-      _fclose(stream);
       if (res == RETURN_EXIT) {
         break;
       }
+      _fclose(stream);
       ctx->error_message = file_name;
       return RETURN_ERROR_IO;
     }
@@ -430,9 +430,7 @@ return_type skip_spaces(FILE *stream, getc_fun _getc, size_t *line_number,
     if (c == EOF || !is_space(c, punctuation_like_spaces)) {
       break;
     }
-    if (c == '\n') {
-      ++*line_number;
-    }
+    *line_number += c == '\n';
   }
   if (c != EOF) {
     return ungetc(c, stream) == EOF
