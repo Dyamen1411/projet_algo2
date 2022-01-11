@@ -126,10 +126,6 @@ static opt_t options[] = {
   OPTION(TOP, true, opt__top, OUTPUT_CONTROL),
   OPTION(UPPERCASING, false, opt__uppercasing, INPUT_CONTROL),
   OPTION(HELP, false, opt__help, INFORMATION),
-  { .long_name = OPT_NAME_LONG__MAN, .short_name = OPT_NAME_SHORT__MAN,
-    .need_argument = (0), .process = (opt__man),
-    .description = LANG_OPT_DESCRIPTION__MAN,
-    .category = OPT_CATEGORY_INFORMATION },
   OPTION(MAN, false, opt__man, INFORMATION),
   OPTION(USAGE, false, opt__usage, INFORMATION),
   OPTION(VERSION, false, opt__version, INFORMATION)
