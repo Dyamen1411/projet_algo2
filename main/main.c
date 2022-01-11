@@ -335,25 +335,27 @@ return_type opt__man(wsctx_parameters_t *p,
   if (ioctl(0, TIOCGWINSZ, &ws) == -1) {
     ws.ws_col = DEFULT_MAX_TEXT_WIDTH;
   }
-  const int indent = 8;
   const size_t exec_name_length = strlen(p->exec_name);
-  const size_t offset = (size_t) indent + exec_name_length;
+  const size_t offset = (size_t) OPT_MAN_DEFAULT_INDENT + exec_name_length;
   //
   printf(MAKE_SECTION(NAME));
-  printf("%*c%s", indent, ' ', p->exec_name);
-  print_description(ws.ws_col, indent, offset,
+  printf("%*c%s", OPT_MAN_DEFAULT_INDENT, ' ', p->exec_name);
+  print_description(ws.ws_col, OPT_MAN_DEFAULT_INDENT, offset,
       " - " LANG_WS__SHORT_DESCRIPTION);
   putchar('\n');
   //
   printf(MAKE_SECTION(SYNOPSIS));
-  printf("%*c" MAKE_BOLD(EXEC_NAME_FORMAT), indent, ' ', p->exec_name);
-  print_description(ws.ws_col, indent, offset, " " LANG_WS__SYNOPSIS);
+  printf("%*c" MAKE_BOLD(EXEC_NAME_FORMAT), OPT_MAN_DEFAULT_INDENT, ' ',
+      p->exec_name);
+  print_description(ws.ws_col, OPT_MAN_DEFAULT_INDENT, offset,
+      " " LANG_WS__SYNOPSIS);
   putchar('\n');
   //
   printf(MAKE_SECTION(DESCRIPTION));
-  printf("\n%*c" MAKE_BOLD(EXEC_NAME_FORMAT), indent, ' ', p->exec_name);
-  _print_description(ws.ws_col, indent, offset, " " LANG_WS__LONG_DESCRIPTION,
-      LANG_OPT__PARAMETER_FILES);
+  printf("\n%*c" MAKE_BOLD(EXEC_NAME_FORMAT), OPT_MAN_DEFAULT_INDENT, ' ',
+      p->exec_name);
+  _print_description(ws.ws_col, OPT_MAN_DEFAULT_INDENT, offset,
+      " " LANG_WS__LONG_DESCRIPTION, LANG_OPT__PARAMETER_FILES);
   putchar('\n');
   //
   printf(MAKE_SECTION(OPTIONS));
@@ -362,19 +364,20 @@ return_type opt__man(wsctx_parameters_t *p,
   PRINT_CATEGORY_MAN(OUTPUT_CONTROL, ws.ws_col);
   //
   printf(MAKE_SECTION(LIMITS));
-  printf("%*c", indent, ' ');
-  _print_description(ws.ws_col, indent, indent, LANG_WS__LIMITS,
-      LANG_OPT__PARAMETER_FILES);
+  printf("%*c", OPT_MAN_DEFAULT_INDENT, ' ');
+  _print_description(ws.ws_col, OPT_MAN_DEFAULT_INDENT, OPT_MAN_DEFAULT_INDENT,
+      LANG_WS__LIMITS, LANG_OPT__PARAMETER_FILES);
   putchar('\n');
   //
   printf(MAKE_SECTION(AUTHORS));
-  printf("%*c", indent, ' ');
-  print_description(ws.ws_col, indent, indent, LANG_WS__AUTHORS);
+  printf("%*c", OPT_MAN_DEFAULT_INDENT, ' ');
+  print_description(ws.ws_col, OPT_MAN_DEFAULT_INDENT, OPT_MAN_DEFAULT_INDENT,
+      LANG_WS__AUTHORS);
   putchar('\n');
   //
   printf(MAKE_SECTION(COPYRIGHT));
-  printf("%*c%s", indent, ' ', p->exec_name);
-  print_description(ws.ws_col, indent, offset,
+  printf("%*c%s", OPT_MAN_DEFAULT_INDENT, ' ', p->exec_name);
+  print_description(ws.ws_col, OPT_MAN_DEFAULT_INDENT, offset,
       " - " WS_VERSION "\n" LANG_WS__COPYRIHT);
   return RETURN_EXIT;
 }
