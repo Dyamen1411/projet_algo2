@@ -135,6 +135,11 @@ static return_type parse_arguments(int argc, char **argv,
     wsctx_parameters_t *parameters, linked_list_t *files, int *last_index);
 
 int main(int argc, char **argv) {
+  const char *exec_name = argv[0]
+      + (strncmp(argv[0], LOCAL_DIRECTORY_PREFIX,
+      sizeof(LOCAL_DIRECTORY_PREFIX) - 1) == 0
+      ? sizeof(LOCAL_DIRECTORY_PREFIX) - 1
+      : 0);
   // initializations
   int r = EXIT_SUCCESS;
   wsctx_parameters_t parameters;
@@ -145,10 +150,7 @@ int main(int argc, char **argv) {
   }
   // context parameters initialization
   {
-    parameters.exec_name = argv[0]
-        + (strncmp(argv[0], LOCAL_DIRECTORY_PREFIX, 2) == 0
-        ? sizeof(LOCAL_DIRECTORY_PREFIX)
-        : 0);
+    parameters.exec_name = exec_name;
     int last_index;
     wsctx_parameters_default_initialization(&parameters);
     switch (parse_arguments(argc, argv, &parameters, files, &last_index)) {
@@ -156,15 +158,18 @@ int main(int argc, char **argv) {
         break;
       case RETURN_ERROR_OPT_UNKNOWN:
         fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__UNKNOWN_OPTION " '%s'.\n",
-            argv[0], argv[last_index]);
-        goto error;
+            exec_name, argv[last_index]);
+        goto error_user_invalid_input;
       case RETURN_ERROR_OPT_MISSING_ARG:
         fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__MISSING_ARGUMENT " '%s'.\n",
-            argv[0], argv[last_index]);
-        goto error;
+            exec_name, argv[last_index]);
+        goto error_user_invalid_input;
+      case RETURN_ERROR_OPT_ARGUMENT:
+        fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__INVALID_PARAMETER " '%s'.\n",
+            exec_name, argv[last_index]);
+        goto error_user_invalid_input;
       case RETURN_ERROR_CAPACITY:
         goto error_capacity;
-      case RETURN_ERROR_OPT_ARGUMENT: // TODO: ??
       case RETURN_EXIT:
         goto dispose;
       default:
@@ -208,22 +213,25 @@ int main(int argc, char **argv) {
     wsctx_output_data(ctx);
   }
   goto dispose;
+error_user_invalid_input:
+  fprintf(stderr, LANG_MESSAGE_MORE_INFO "\n", exec_name);
+  goto error;
 error_not_enough_files:
-  fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__FILE_COUNT ".\n", argv[0]);
+  fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__FILE_COUNT ".\n", exec_name);
   goto error;
 error_unaccessible_file:
   fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__UNACCESSIBLE_FILE " '%s'.\n",
-      argv[0], wsctx_get_error_message(ctx));
+      exec_name, wsctx_get_error_message(ctx));
   goto error;
 error_io:
-  fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__IO " '%s'.\n", argv[0],
+  fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__IO " '%s'.\n", exec_name,
       wsctx_get_error_message(ctx));
   goto error;
 error_capacity:
-  fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__CAPACITY "\n", argv[0]);
+  fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__CAPACITY "\n", exec_name);
   goto error;
 error_unexpected:
-  fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__UNEXPECTED "\n", argv[0]);
+  fprintf(stderr, "%s: " LANG_MESSAGE_ERROR__UNEXPECTED "\n", exec_name);
   goto error;
 error:
   r = EXIT_FAILURE;
