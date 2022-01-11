@@ -29,8 +29,7 @@
 #if (LANG == EN)
 #include "lang_en.h"
 #elif (LANG == FR)
-#pragma message("FR is not supported yet. Switching to english...")
-#include "lang_en.h"
+#include "lang_fr.h"
 #elif (LANG == PL)
 #pragma message("PL is not supported yet. Switching to english...")
 #include "lang_en.h"
