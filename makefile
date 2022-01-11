@@ -1,9 +1,10 @@
-main_dir = main
-hashtable_dir = hashtable
-holdall_dir = holdall
-linked_list_dir = linked_list
-context_dir = context
-opt_dir = opt
+main_dir = ./main/
+hashtable_dir = ./hashtable/
+holdall_dir = ./holdall/
+linked_list_dir = ./linked_list/
+context_dir = ./context/
+opt_dir = ./opt/
+lang_dir = ./lang/
 
 CC = gcc
 CFLAGS = -std=c18 \
@@ -15,6 +16,7 @@ CFLAGS = -std=c18 \
   -I$(linked_list_dir) \
   -I$(context_dir) \
   -I$(opt_dir) \
+  -I$(lang_dir)
 
 LDFLAGS =
 
@@ -44,7 +46,7 @@ all: $(executable)
 $(executable): $(objects)
 	$(CC) $(objects) $(LDFLAGS) -o $(executable)
 
-main.o: main.c hashtable.h holdall.h linked_list.h context.h opt.h types.h
+main.o: main.c hashtable.h holdall.h linked_list.h context.h opt.h
 hashtable.o: hashtable.c hashtable.h
 holdall.o: holdall.c holdall.h
 linked_list.o: linked_list.c linked_list.h

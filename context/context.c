@@ -1,6 +1,7 @@
 #include "context.h"
 #include "holdall.h"
 #include "hashtable.h"
+#include "lang.h"
 #include "linked_list.h"
 
 #include <ctype.h>
@@ -106,12 +107,24 @@ static bool is_space(int c, bool punctuation_like_spaces);
 static int word_compar_file_appearances(const word_t **word1,
     const word_t **word2);
 
+//  word_compar_pattern : compare le motif de la chaîne de caractères
+//    pointée par word1 à celui de la chaîne de caractères pointée par
+//    word2.
 static int word_compar_pattern(const word_t **word1, const word_t **word2);
+
+//  word_compar_count : compare le nombre total d'occurrence associé à
+//    la chaîne de caractères pointée par word1 à celui de la chaine de
+//    caractères pointée par word2.
 static int word_compar_count(const word_t **word1, const word_t **word2);
+
+//  word_compar_word : compare les deux chaines de caractères pointées
+//    respectivement par word1 et word2.
 static int word_compar_word(const word_t **word1, const word_t **word2);
 
-//  TODO: comment min__size_t & print_word
+//  min_size_t : renvoie le minimum des tailles a et b
 static size_t min__size_t(size_t a, size_t b);
+
+//  print_word
 static void print_word(wsctx_t *ctx, word_t *word);
 
 //  r_free : libere les ressources allouees a ptr et renvoie 0.
@@ -352,10 +365,10 @@ return_type wsctx_parse_next_file(wsctx_t *ctx) {
     res = skip_spaces(stream, _getc, &line_number,
         ctx->parameters.punctuation_like_spaces);
     if (res != RETURN_NONE) {
-      _fclose(stream);
       if (res == RETURN_EXIT) {
         break;
       }
+      _fclose(stream);
       ctx->error_message = file_name;
       return RETURN_ERROR_IO;
     }
@@ -377,13 +390,14 @@ return_type wsctx_parse_next_file(wsctx_t *ctx) {
     if (ctx->parameters.initial != 0
         && word_length >= ctx->parameters.initial) {
       word_buffer[ctx->parameters.initial] = '\0';
-      fprintf(stderr, "%s: Word from ", ctx->parameters.exec_name);
+      fprintf(stderr, "%s: ", ctx->parameters.exec_name);
       if (*file_name == '\0') {
-        fprintf(stderr, "standard input");
+        fprintf(stderr, LANG_MESSAGE_WARNING_WORD_SPLICING__STDIN, line_number);
       } else {
-        fprintf(stderr, "'%s'", file_name);
+        fprintf(stderr, LANG_MESSAGE_WARNING_WORD_SPLICING__FILE, file_name,
+            line_number);
       }
-      fprintf(stderr, " at line %zu cut: '%s...'.\n", line_number, word_buffer);
+      fprintf(stderr, ": '%s...'.\n", word_buffer);
     }
     // adding word to context
     word_t *word = wsctx_add_word(ctx, word_buffer);
@@ -416,9 +430,7 @@ return_type skip_spaces(FILE *stream, getc_fun _getc, size_t *line_number,
     if (c == EOF || !is_space(c, punctuation_like_spaces)) {
       break;
     }
-    if (c == '\n') {
-      ++*line_number;
-    }
+    *line_number += c == '\n';
   }
   if (c != EOF) {
     return ungetc(c, stream) == EOF
@@ -613,8 +625,8 @@ size_t min__size_t(size_t a, size_t b) {
 void print_word(wsctx_t *ctx, word_t *word) {
   for (size_t i = 0; i < ctx->files.count; ++i) {
     printf("%c",
-        ((word->pattern[(i / BITS_IN_BYTE)] >>
-        (i % BITS_IN_BYTE)) & 1) ? 'x' : '-');
+        ((word->pattern[(i / BITS_IN_BYTE)]
+        >> (i % BITS_IN_BYTE)) & 1) ? 'x' : '-');
   }
   printf("\t%zu\t%s\n", word->count, word->word);
 }

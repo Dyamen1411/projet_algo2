@@ -8,16 +8,13 @@
 #include <stdbool.h>
 
 #define OPT__SHORT  "-"
-#define OPT_HELP_S  "h"
-#define OPT_INITIAL_S  "i"
-#define IS_SHORT_OPT(arg) \
-  (strncmp((arg), OPT__SHORT, sizeof(OPT__SHORT) - 1) == 0)
-
 #define OPT__LONG   "--"
-#define OPT_HELP_L  "help"
-#define OPT_INITIAL_L  "initial"
-#define IS_LONG_OPT(arg) \
-  (strncmp((arg), OPT__LONG, sizeof(OPT__LONG) - 1) == 0)
+
+#define OPT_LONG_NO_NAME ""
+#define OPT_SHORT_NO_NAME '\0'
+
+#define OPT_HAS_SHORT_NAME(_opt) ((_opt).short_name != OPT_SHORT_NO_NAME)
+#define OPT_HAS_LONG_NAME(_opt) (*(_opt).long_name != *OPT_LONG_NO_NAME)
 
 typedef struct opt_t {
   const char *long_name;
@@ -25,6 +22,7 @@ typedef struct opt_t {
   bool need_argument;
   return_type (*process) (wsctx_parameters_t *p, const char *arg);
   const char *description;
+  unsigned int category;
 } opt_t;
 
 return_type parse_opt(const int argc, char **argv, int *arg_pos,
