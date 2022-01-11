@@ -99,24 +99,77 @@ typedef enum opt_index {
   OPT_INDEX_VERSION
 } opt_index;
 
+//  print_opt__help : affiche la les noms court et long puis la description de
+//    l'option pointee par opt suivi de une indentation de
+//    OPT_HELP_DEFAULT_INDENT caracteres.
 static void print_opt__help(opt_t *opt, size_t column_count);
+
+//  print_opt__man : affiche la description de l'option pointee par opt avec
+//    une indentation de OPT_MAN_DEFAULT_INDENT caracteres dans un format de
+//    page de mannuel.
 static void print_opt__man(opt_t *opt, size_t column_count);
+
+//  _print_description : affiche le texte pointe par description avec une
+//    indentation de indent caracteres. Si match n'est pas nul, souligne toutes
+//    les occurences de match dans le text pointe par description.
 static void _print_description(size_t column_count, size_t indent,
     size_t offset, const char *description, const char *match);
+
+//  print_description : affiche le texte pointe par description avec une
+//    indentation de indent caracteres.
 static void print_description(size_t column_count, size_t indent, size_t offset,
     const char *description);
+
+//  _print_section_man : affiches toutes les options (options) qui font partie
+//    de la categorie category au format d'une page de mannuel.
 static void _print_section_man(opt_category category, size_t column_count);
 
+//  opt__help : affiche de l'aide sut la sortie standard puis renvoie
+//    RETURN_EXIT
 static return_type opt__help(wsctx_parameters_t *p, const char *arg);
+
+//  opt__initial : si le parametre arg est bien une chaine de caractere qui
+//    represente un nombre entier positif, met le champ p->initial a cette
+//    valeur puis renvoie RETURN_NONE. Sinon, renvoie RETURN_ERROR_OPT_ARGUMENT.
 static return_type opt__initial(wsctx_parameters_t *p, const char *arg);
+
+//  opt__punctuation_like_space : met le champ p->opt__punctuation_like_space
+//    a true. puis renvoie RETURN_NONE.
 static return_type opt__punctuation_like_space(wsctx_parameters_t *p,
     const char *arg);
+
+//  opt__same_numbers : met le champ p->same_numbers a true puis renvoie
+//    RETURN_NONE
 static return_type opt__same_numbers(wsctx_parameters_t *p, const char *arg);
+
+//  opt__top : si le parametre arg est bien une chaine de caractere qui
+//    represente un nombre entier positif, met le champ p->top a cette valeur
+//    puis renvoie RETURN_NONE. Sinon, renvoie RETURN_ERROR_OPT_ARGUMENT.
 static return_type opt__top(wsctx_parameters_t *p, const char *arg);
+
+//  opt__uppercasing : met le champ p->uppercasing a true puis renvoie
+//    RETURN_NONE.
 static return_type opt__uppercasing(wsctx_parameters_t *p, const char *arg);
+
+//  opt__man : affiche la page de manuel du programme puis renvoie RETURN_EXIT.
 static return_type opt__man(wsctx_parameters_t *p, const char *arg);
+
+//  opt__usage : affiche l'utilisation du programme puis renvoie RETURN_EXIT.
 static return_type opt__usage(wsctx_parameters_t *p, const char *arg);
+
+//  opt_version : affiche la version du programme puis renvoie RETURN_EXIT.
 static return_type opt__version(wsctx_parameters_t *p, const char *arg);
+
+//  parse_arguments : traite tout les arguments pointes par argv.
+//    Les fichiers sont ajoutes a la liste chainee pointe par files et les
+//    options rencontrees sont traitees par leur fonction respective
+//    (opt__ ## name). Renvoie RETURN_NONE si tout s'est bien passe,
+//    RETURN_ERROR_CAPACITY si un depassement de memoire est survenu,
+//    RETURN_ERROR_OPT_ARGUMENT si le parametre d'une option est incorrecte,
+//    RETURN_ERROR_OPT_ARGUMENT si un argument n'est pas reconnu,
+//    RETURN_ERROR_OPT_MISSING_ARG si le parametre d'une option est manquant.
+static return_type parse_arguments(int argc, char **argv,
+    wsctx_parameters_t *parameters, linked_list_t *files, int *last_index);
 
 static opt_t options[] = {
   OPTION(INITIAL, true, opt__initial, INPUT_CONTROL),
@@ -130,9 +183,6 @@ static opt_t options[] = {
   OPTION(USAGE, false, opt__usage, INFORMATION),
   OPTION(VERSION, false, opt__version, INFORMATION)
 };
-
-static return_type parse_arguments(int argc, char **argv,
-    wsctx_parameters_t *parameters, linked_list_t *files, int *last_index);
 
 int main(int argc, char **argv) {
   const char *exec_name = argv[0]
